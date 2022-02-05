@@ -1,0 +1,6 @@
+public struct QuranAudioPlayer {
+    public private(set) var text = "Hello, World!"
+
+    public init() {
+    }
+}
