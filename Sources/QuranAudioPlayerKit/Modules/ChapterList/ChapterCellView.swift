@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct ChapterCell:View {
+    @ObservedObject var viewModel = ChapterListViewModel()
     @State var showSwipeButtons:Bool = false
     var onFavourite:(ChapterModel) -> Void = { _ in }
     var onDownload:(ChapterModel) -> Void = { _ in }
@@ -17,90 +18,95 @@ public struct ChapterCell:View {
         ZStack(alignment: .trailing) {
             HStack {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 15)
-                        .strokeBorder(ThemeService.borderColor,lineWidth: 2)
-                        .frame(height: 55)
+                    Rectangle()
+                        .fill(ThemeService.themeColor.opacity(0.1))
+                        .frame(height: 70)
                     HStack {
                         ZStack {
-                            Circle()
-                                .strokeBorder(ThemeService.borderColor, lineWidth: 3)
-                                .background(Circle().fill(ThemeService.titleColor.opacity(0.8)))
-                                .frame(width: 40, height: 40)
-                                .cornerRadius(5)
-                                .foregroundColor(ThemeService.themeColor)
+                            Rectangle()
+                                .fill(ThemeService.themeColor.opacity(0.2))
+                                .frame(width: 40, height: 70, alignment: .leading)
                             
                             Text("\(chapter.index)")
-                                .foregroundColor(ThemeService.whiteColor)
-                                .font(.system(size: 19))
+                                .foregroundColor(Color(UIColor.label.withAlphaComponent(0.5)))
+                                .font(.system(size: 17))
                         }
                         VStack(alignment:.leading) {
                             Text("سورَة \(chapter.name)")
                                 .font(ThemeService.shared.arabicFont(size: 20))
-                                .foregroundColor(ThemeService.titleColor)
+                                .foregroundColor(Color(UIColor.label))
                             Text("Surah \(chapter.nameTrans)")
-                                .font(ThemeService.shared.translationFont(size: 15))
-                                .foregroundColor(ThemeService.subTitleColor)
-                                .offset(y:-3)
+                                .font(.system(size: 15))
+                                .foregroundColor(Color(UIColor.secondaryLabel))
                         }
                         Spacer()
                         Button {
-                            showSwipeButtons.toggle()
+                            viewModel.setCurrent(chapter: chapter)
+//                            showSwipeButtons.toggle()
                         } label: {
-                            Image("more")
-                                .resizable()
-                                .frame(width: 25 , height: 25)
-                                .tint(ThemeService.titleColor)
+                            Image(systemName: (chapter.isPlaying ?? false) ? "play.fill" : "play")
+                                .font(.system(size: 20))
+                                .frame(width: 60, height: 70)
+                                .foregroundColor(ThemeService.themeColor)
                         }
-                        
                     }
-                    .padding(.horizontal,7)
                 }
-                .offset(x: showSwipeButtons ? -88 : 0)
-                .animation(.spring(dampingFraction: 0.5),
-                           value: showSwipeButtons)
+                .background(Color(UIColor.systemBackground))
+//                .offset(x: showSwipeButtons ? -88 : 0)
+//                .animation(.spring(dampingFraction: 0.5),
+//                           value: showSwipeButtons)
             }
-            if showSwipeButtons {
-                HStack(spacing:0){
-                    ZStack {
-                        Rectangle()
-                            .fill(ThemeService.themeColor.opacity(0.8))
-                            .frame(width: 44, height: 44)
-                        Button {
-                            onDownload(chapter)
-                            showSwipeButtons.toggle()
-                        } label: {
-                            let isDownloaded = DataService.shared.isDownloaded(index: chapter.index)
-                            Image(systemName: isDownloaded ? "checkmark.icloud.fill" : "icloud.and.arrow.down")
-                        }
-                    }
-                    ZStack {
-                        Rectangle()
-                            .fill(ThemeService.themeColor.opacity(0.7))
-                            .frame(width: 44, height: 44)
-                        Button {
-                            onFavourite(chapter)
-                            showSwipeButtons.toggle()
-                        } label: {
-                            let isFavourite = DataService.shared.isFavourite(index: chapter.index)
-                            Image(systemName: isFavourite ? "star.fill": "star")
-                        }
-                    }
-                }.foregroundColor(ThemeService.whiteColor)
-            }
+//            if showSwipeButtons {
+//                HStack(spacing:0){
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(ThemeService.themeColor.opacity(0.8))
+//                            .frame(width: 44, height: 44)
+//                        Button {
+//                            onDownload(chapter)
+//                            showSwipeButtons.toggle()
+//                        } label: {
+//                            let isDownloaded = DataService.shared.isDownloaded(index: chapter.index)
+//                            Image(systemName: isDownloaded ? "checkmark.icloud.fill" : "icloud.and.arrow.down")
+//                        }
+//                    }
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(ThemeService.themeColor.opacity(0.7))
+//                            .frame(width: 44, height: 44)
+//                        Button {
+//                            onFavourite(chapter)
+//                            showSwipeButtons.toggle()
+//                        } label: {
+//                            let isFavourite = DataService.shared.isFavourite(index: chapter.index)
+//                            Image(systemName: isFavourite ? "star.fill": "star")
+//                        }
+//                    }
+//                }.foregroundColor(ThemeService.whiteColor)
+//            }
             
-        }.foregroundColor(ThemeService.titleColor)
+        }.foregroundColor(ThemeService.themeColor)
             .padding(.horizontal,7)
     }
 }
 
 struct ChapterCell_Previews: PreviewProvider {
     static var previews: some View {
-        ChapterCell(chapter:ChapterModel(index: 1,
-                                         name: "ٱلْفَاتِحَة",
-                                         nameTrans: "Al-Fatihah",
-                                         fileName: "000_Al_Fattiha.mp3",
-                                         size: "768Kb",
-                                         durationInSecs: 98))
+        Group {
+            ChapterCell(chapter:ChapterModel(index: 1,
+                                             name: "ٱلْفَاتِحَة",
+                                             nameTrans: "Al-Fatihah",
+                                             fileName: "000_Al_Fattiha.mp3",
+                                             size: "768Kb",
+                                             durationInSecs: 98))
+            ChapterCell(chapter:ChapterModel(index: 1,
+                                             name: "ٱلْفَاتِحَة",
+                                             nameTrans: "Al-Fatihah",
+                                             fileName: "000_Al_Fattiha.mp3",
+                                             size: "768Kb",
+                                             durationInSecs: 98))
+                .preferredColorScheme(.dark)
+        }
     }
 }
 

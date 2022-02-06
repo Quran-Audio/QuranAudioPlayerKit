@@ -109,11 +109,7 @@ public class AudioService {
     }
     
     public func playPause() {
-        if isPlaying {
-            player?.pause()
-        }else {
-            player?.play()
-        }
+        isPlaying ? player?.pause() : player?.play()
     }
     
     public func seekTo(seconds:CGFloat) {
