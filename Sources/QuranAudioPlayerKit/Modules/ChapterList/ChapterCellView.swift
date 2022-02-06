@@ -31,9 +31,9 @@ public struct ChapterCell:View {
                                 .foregroundColor(Color(UIColor.label.withAlphaComponent(0.5)))
                                 .font(.system(size: 17))
                         }
-                        VStack(alignment:.leading) {
+                        VStack(alignment:.leading, spacing: 5) {
                             Text("سورَة \(chapter.name)")
-                                .font(ThemeService.shared.arabicFont(size: 20))
+                                .font(ThemeService.shared.arabicFont(size: 17))
                                 .foregroundColor(Color(UIColor.label))
                             Text("Surah \(chapter.nameTrans)")
                                 .font(.system(size: 15))
@@ -44,7 +44,7 @@ public struct ChapterCell:View {
                             viewModel.setCurrent(chapter: chapter)
 //                            showSwipeButtons.toggle()
                         } label: {
-                            Image(systemName: (chapter.isPlaying ?? false) ? "play.fill" : "play")
+                            Image(systemName: (chapter.isPlaying ?? false) ? "waveform" : "play")
                                 .font(.system(size: 20))
                                 .frame(width: 60, height: 70)
                                 .foregroundColor(ThemeService.themeColor)

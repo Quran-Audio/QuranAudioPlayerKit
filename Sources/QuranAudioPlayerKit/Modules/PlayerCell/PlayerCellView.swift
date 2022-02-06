@@ -18,59 +18,43 @@ struct PlayerCellView: View {
                     Rectangle().frame(height: 5)
                         .foregroundColor(Color(uiColor: .tertiarySystemBackground))
                     Rectangle().frame(width:geometry.size.width * viewModel.sliderValue,height: 5)
-                        .foregroundColor(Color(uiColor: .systemBlue))
+                        .background(Color.accentColor.opacity(0.5))
                 }.frame(height: 5)
             }
+            
             HStack {
-                ZStack {
-                    //titleBox
-                    ZStack {
-                        if viewModel.isPlaying {
-                            Image(systemName: "speaker.wave.2")
-                                .foregroundColor(ThemeService.whiteColor)
-                                .font(.system(size: 25))
-                        } else {
-//                            Text("\(viewModel.currentChapter?.index ?? 0)")
-//                                .font(.system(size: 25))
-//                                .foregroundColor(ThemeService.whiteColor)
-//                                .frame(width: 40, height: 90)
-                        }
-                    }
-                }
+                Text("\(viewModel.currentChapter?.index ?? 0)")
+                    .font(.system(size: 17))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+                    .frame(width: 30, height: 70, alignment: .center)
                 HStack {
-                    Text("\(viewModel.currentChapter?.index ?? 0)")
-                        .font(.system(size: 20))
-                        .foregroundColor(Color(uiColor: .label))
-                        .frame(width: 30, height: 70, alignment: .center)
-                    HStack {
-                        VStack(alignment: .leading) {
-                            VStack(alignment: .leading, spacing: 0) {
-                                Text("سورَة \(viewModel.currentChapter?.name ?? "")")
-                                    .foregroundColor(Color(uiColor: .label))
-                                    .font(ThemeService.shared.arabicFont(size: 20).bold())
-                                Text("Surah \(viewModel.currentChapter?.nameTrans ?? "")")
-                                    .foregroundColor(Color(uiColor: .secondaryLabel))
-                                    .font(ThemeService.shared.translationFont(size: 15))
-                            }
+                    VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("سورَة \(viewModel.currentChapter?.name ?? "")")
+                                .foregroundColor(Color(uiColor: .label))
+                                .font(ThemeService.shared.arabicFont(size: 17))
+                            Text("Surah \(viewModel.currentChapter?.nameTrans ?? "")")
+                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                                .font(ThemeService.shared.translationFont(size: 15))
                         }
-                        Spacer(minLength: 8)
                     }
-                    ZStack {
-                        if viewModel.isBuffering {
-                            LoaderView()
-                        }
-                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                            .foregroundColor(Color(uiColor: .label))
-                            .font(.system(size: 25))
-                            .frame(width: 50, height: 50)
-                            .onTapGesture {
-                                viewModel.playPause()
-                            }
-                    }
-                    .padding(10)
+                    Spacer(minLength: 8)
                 }
+                ZStack {
+                    if viewModel.isBuffering {
+                        LoaderView()
+                    }
+                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                        .foregroundColor(Color(uiColor: .label))
+                        .font(.system(size: 25))
+                        .frame(width: 50, height: 50)
+                        .onTapGesture {
+                            viewModel.playPause()
+                        }
+                }
+                .padding(10)
             }
-            .background(ThemeService.red)
+            .background(Color.accentColor.opacity(0.2))
             .frame(height: 70)
         }
         .onAppear(perform: {
@@ -78,15 +62,14 @@ struct PlayerCellView: View {
         }).onDisappear(perform: {
             viewModel.unSubscribeAudioNotification()
         })
-        //.frame(height: 170)
     }
     
     @ViewBuilder private var titleBox: some View {
         HStack(spacing:0) {
             Rectangle().frame(width: 50,height: 50)
                 .foregroundColor(ThemeService.themeColor)
-//            Rectangle().frame(width: 1,height: 50)
-//                .foregroundColor(ThemeService.whiteColor)
+            //            Rectangle().frame(width: 1,height: 50)
+            //                .foregroundColor(ThemeService.whiteColor)
         }
     }
     

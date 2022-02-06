@@ -19,6 +19,7 @@ struct ChapterListView: View {
     @State var toastDescriptiom:String = ""
     @State var toastType:ToastView.ToasType = .info
     @State var onToastConfirm:(() -> Void)?
+    @State var showFullPlayer: Bool = false
     
     var body: some View {
         NavigationView {
@@ -37,17 +38,22 @@ struct ChapterListView: View {
                         if AudioService.shared.isCurrentChapterAvailable() {
                             PlayerCellView(viewModel: playerCellViewModel)
                                 .onTapGesture {
-                                    fullPlayerFrameHeight = 250
-                                    fullPlayerOpacity = 1
+                                    showFullPlayer.toggle()
+//                                    fullPlayerFrameHeight = 400
+//                                    fullPlayerOpacity = 1
                                 }
                         }
                         TabBarView(viewModel: viewModel)
                         //.background(ThemeService.themeColor)
                     }
-                    FullPlayerView(frameHeight: $fullPlayerFrameHeight,
-                                   opacity:$fullPlayerOpacity)
                 }
             }
+            .sheet(isPresented: $showFullPlayer, onDismiss: {
+//                showFullPlayer.toggle()
+            }, content: {
+                FullPlayerView()
+            })
+            
             .navigationTitle("Quran Audio")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -172,6 +178,7 @@ struct ChapterListView: View {
                     .onTapGesture {
                         self.viewModel.setCurrent(chapter: chapter)
                         //TODO: Show full player
+                        
                     }
             }
             Spacer(minLength: 5)

@@ -21,7 +21,8 @@ public class ThemeService {
     private init() {}
     
     public func arabicFont(size:CGFloat) -> Font {
-        Font.custom("XB Niloofar", size: size)
+//        Font.custom("XB Niloofar", size: size)
+        Font.system(size: size)
     }
     
     public func translationFont(size:CGFloat) -> Font {

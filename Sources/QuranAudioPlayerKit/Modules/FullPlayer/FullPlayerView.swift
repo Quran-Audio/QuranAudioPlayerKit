@@ -1,139 +1,150 @@
 //
-//  PlayerView.swift
-//  Quran Malayalam
+//  SwiftUIView.swift
 //
-//  Created by Mohammed Shafeer on 10/01/22.
+//  Created by Mohammed Shafeer on 11/01/22.
 //
 
 import SwiftUI
 
 struct FullPlayerView: View {
     @ObservedObject private var viewModel = FullPlayerViewModel()
-    @Binding var frameHeight:CGFloat
-    @Binding var opacity:CGFloat
-    
+
     var body: some View {
-        VStack(spacing:10){
+        VStack (alignment: .center, spacing: 20) {
+            GeometryReader { geo in
+                Image(systemName: "sparkles")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5)
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .foregroundColor(ThemeService.themeColor.opacity(0.3))
+            }
+            
+            TitleView(viewModel: FullPlayerViewModel())
+            SliderView(viewModel: FullPlayerViewModel())
+            ButtonView(viewModel: FullPlayerViewModel())
+           
             Spacer()
-            closeButton
-            TitleView(viewModel: viewModel)
-            ButtonView(viewModel: viewModel)
-            SliderView(viewModel: viewModel)
-            Divider()
         }
+        .background(Color(uiColor: .systemBackground))
+        
         .onAppear(perform: {
             viewModel.subscribeAudioNotification()
         }).onDisappear(perform: {
             viewModel.unSubscribeAudioNotification()
         })
-        .background(ThemeService.themeColor)
-        .frame(height: frameHeight)
-        .cornerRadius(radius: 20,corners:[.topLeft,.topRight])
-        .animation(.spring(dampingFraction: 0.55),value: frameHeight)
-        .opacity(opacity)
-        .shadow(color: ThemeService.whiteColor.opacity(0.2),
-                radius: 1,
-                x: 0,
-                y: -1)
     }
-    
-    @ViewBuilder var closeButton: some View {
-        Button {
-            frameHeight = 0
-            withAnimation(.easeIn(duration: 2)) {
-                opacity = 0
-            }
-        } label: {
-            Image(systemName: "chevron.down")
-                .font(.system(size: 20))
-                .foregroundColor(ThemeService.whiteColor)
+}
+
+struct TitleView: View {
+    @ObservedObject var viewModel:FullPlayerViewModel
+    var body: some View {
+       
+        VStack(alignment:.center, spacing: 10) {
+            Text("سورَة \(viewModel.chapterName)")
+                .font(.system(.title))
+                .foregroundColor(Color(uiColor: .label))
+            Text("Surah \(viewModel.chapterNameTrans)")
+                .font(.system(.title3))
+                .foregroundColor(Color(uiColor: .secondaryLabel))
         }
-        .frame(width: 44, height: 40)
+        .padding()
+        .frame(maxWidth:.infinity)
     }
-    
-    struct TitleView: View {
-        @ObservedObject var viewModel:FullPlayerViewModel
-        var body: some View {
-            VStack(alignment:.center,spacing: 0) {
-                Text("سورَة \(viewModel.chapterName)")
-                    .font(ThemeService.shared.arabicFont(size: 30))
-                    .foregroundColor(ThemeService.whiteColor)
-                Text("Surah \(viewModel.chapterNameTrans)")
-                    .font(ThemeService.shared.translationFont(size: 20))
-                    .foregroundColor(ThemeService.whiteColor.opacity(0.7))
-            }.frame(maxWidth:.infinity)
-            
-        }
-    }
-    
-    struct ButtonView: View {
-        @ObservedObject var viewModel:FullPlayerViewModel
-        var body: some View {
-            HStack(spacing: 30) {
-                Button {
-                    viewModel.onPrevoius()
-                } label: {
-                    Image(systemName: "backward")
-                }
-                .font(.system(size: 20))
-                ZStack {
-                    if viewModel.isBuffering {
-                        LoaderView()
+}
+
+struct ButtonView: View {
+    @ObservedObject var viewModel:FullPlayerViewModel
+    var body: some View {
+        Group {
+            HStack {
+                Image(systemName: "backward")
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+                    .font(.system(size: 25))
+                    .frame(width: 50, height: 50)
+                    .onTapGesture {
+                        viewModel.onPrevoius()
                     }
-                    Button {
+                Image(systemName: "gobackward.10")
+                    .foregroundColor(Color(uiColor: .label))
+                    .font(.system(size: 25))
+                    .frame(width: 50, height: 50)
+                    .onTapGesture {
+                        //TODO: Not working properly - Need to fix
+                        viewModel.seekTo(
+                            seconds: CGFloat(viewModel.currentChapter?.durationInSecs ?? 0 - 10))
+                    }
+                Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                    .foregroundColor(ThemeService.themeColor)
+                    .font(.system(size: 60))
+                    .frame(width: 80, height: 80)
+                    .onTapGesture {
                         viewModel.playPause()
-                    } label: {
-                        Image(systemName: viewModel.isPlaying ? "pause" : "play")
                     }
-                    .font(.system(size: 40))
-                }
-                
-                Button {
-                    viewModel.onNext()
-                } label: {
-                    Image(systemName: "forward")
-                }
-                .font(.system(size: 20))
-                
-            }.offset(y:20)
-                .foregroundColor(ThemeService.whiteColor)
-        }
-    }
-    
-    struct SliderView: View {
-        @StateObject var viewModel:FullPlayerViewModel
-        @State var sliderVal:Double = 0
-        var body: some View {
-            VStack(spacing:20){
-                Slider(value: $viewModel.sliderValue,
-                       in: 0...viewModel.sliderMaxValue){ isEdited in
-                    viewModel.seekTo(seconds: viewModel.sliderValue)
-                }
-                       .accentColor(ThemeService.whiteColor)
-                       .padding(.horizontal)
-                       .offset(y:10)
-                
-                HStack() {
-                    Text("\(viewModel.currentTimeText)")
-                    Spacer()
-                    Text("\(viewModel.durationText)")
-                }
-                .foregroundColor(ThemeService.whiteColor)
-                .font(.system(size: 16))
-                .offset(y: -8)
-                .padding(.horizontal)
+                Image(systemName: "goforward.10")
+                    .foregroundColor(Color(uiColor: .label))
+                    .font(.system(size: 25))
+                    .frame(width: 50, height: 50)
+                    .onTapGesture {
+                        //TODO: Not working properly - Need to fix
+                        viewModel.seekTo(
+                            seconds: CGFloat(viewModel.currentChapter?.durationInSecs ?? 0 + 10))
+                    }
+                Image(systemName: "forward")
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+                    .font(.system(size: 25))
+                    .frame(width: 50, height: 50)
+                    .onTapGesture {
+                        viewModel.onNext()
+                    }
             }
         }
     }
+}
+
+struct SliderView: View {
+    @StateObject var viewModel:FullPlayerViewModel
+    @State var sliderVal:Double = 50
+    var body: some View {
+        VStack(spacing:20) {
+            Slider(value: $viewModel.sliderValue,
+                   in: 0...viewModel.sliderMaxValue){ isEdited in
+                viewModel.seekTo(seconds: viewModel.sliderValue)
+            }
+                   .accentColor(ThemeService.themeColor)
+                   .padding(.horizontal)
+            HStack() {
+                Text("\(viewModel.currentTimeText)")
+                Spacer()
+                Text("\(viewModel.durationText)")
+            }
+            .foregroundColor(Color(uiColor: .secondaryLabel))
+            .font(.system(size: 16))
+            .offset(y: -10)
+            .padding(.horizontal)
+        }
+    }
+}
+
+struct LoaderView:View {
+    var tintColor:Color = ThemeService.whiteColor
+    var scaleSize:CGFloat = 2.5
     
-    struct LoaderView:View {
-        var tintColor:Color = ThemeService.whiteColor
-        var scaleSize:CGFloat = 2.5
-        
-        var body: some View {
-            ProgressView()
-                .scaleEffect(scaleSize,anchor: .center)
-                .progressViewStyle(CircularProgressViewStyle(tint: tintColor))
+    var body: some View {
+        ProgressView()
+            .scaleEffect(scaleSize,anchor: .center)
+            .progressViewStyle(CircularProgressViewStyle(tint: tintColor))
+    }
+}
+
+struct FullPlayerView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            FullPlayerView()
+                .previewDevice("iPhone 13 mini")
+            FullPlayerView()
+                .preferredColorScheme(.dark)
+                .previewDevice("iPhone 13 mini")
         }
     }
 }
