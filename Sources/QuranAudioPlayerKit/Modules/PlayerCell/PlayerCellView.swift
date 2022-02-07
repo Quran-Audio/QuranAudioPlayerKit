@@ -17,9 +17,10 @@ struct PlayerCellView: View {
                 GeometryReader { geometry in
                     Rectangle().frame(height: 5)
                         .foregroundColor(Color(uiColor: .tertiarySystemBackground))
-                    Rectangle().frame(width:geometry.size.width * viewModel.sliderValue,height: 5)
-                        .background(Color.accentColor.opacity(0.5))
-                }.frame(height: 5)
+                    Rectangle().frame(width:geometry.size.width * viewModel.sliderValue, height: 5)
+                        .foregroundColor(ThemeService.themeColor)
+                }
+                .frame(height: 5)
             }
             
             HStack {
@@ -54,7 +55,7 @@ struct PlayerCellView: View {
                 }
                 .padding(10)
             }
-            .background(Color.accentColor.opacity(0.2))
+            .background(ThemeService.indigo.opacity(0.5))
             .frame(height: 70)
         }
         .onAppear(perform: {
