@@ -24,14 +24,8 @@ struct SettingsView: View {
                 Spacer()
             }
         }
-        .foregroundColor(ThemeService.themeColor)
-        .navigatorView(title: "Settings",
-                        showBackButton: true) {
-            Text("").opacity(0)
-        } rightItems: {
-            Text("").opacity(0)
-        }
-
+        .foregroundColor(Color(uiColor: .label))
+        .navigationTitle("Settings")
     }
 }
 
@@ -39,36 +33,34 @@ struct SettingsView: View {
 extension SettingsView {
     @ViewBuilder var shareView:some View {
         VStack(alignment:.leading) {
-            Text("Share:").bold()
-                .font(.system(size: 20))
             Button(action: {
                 actionSheet()
             }, label: {
                 HStack{
-                    Text("The App")
+                    Text("Share App").bold()
                     Spacer()
                     Image(systemName: "square.and.arrow.up")
                 }
-                .foregroundColor(ThemeService.themeColor)
+                .foregroundColor(Color(uiColor: .label))
             })
-                .padding(.all,20)
-                .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
+                .padding(.all,10)
         }
         .padding()
         .font(.system(size: 20))
     }
     @ViewBuilder var emailView:some View {
         VStack(alignment:.leading) {
-            Text("Email:")
-                .font(.system(size: 20)).bold()
+//            Text("Email:")
+//                .font(.system(size: 20)).bold()
+//                .padding(.vertical, 20)
             Button(action: {
                 if MFMailComposeViewController.canSendMail() {
                     self.isShowingMailView.toggle()
                 }
             }, label: {
                 HStack{
-                    VStack(alignment: .leading){
-                        Text("Your suggestions")
+                    VStack(alignment: .leading) {
+                        Text("Email your suggestions").bold()
                         if !MFMailComposeViewController.canSendMail() {
                             Text("Email not configured!")
                                 .font(.system(size: 15))
@@ -78,21 +70,23 @@ extension SettingsView {
                     Spacer()
                     Image(systemName: "envelope")
                 }
-                .foregroundColor(ThemeService.themeColor)
+                .foregroundColor(Color(uiColor: .label))
             })
                 .disabled(!MFMailComposeViewController.canSendMail())
                         .sheet(isPresented: $isShowingMailView) {
                             MailView(result: self.$result)
                         }
-                .padding(.all,20)
-                .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
+                .padding(10)
+                //.overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
         }
-        .padding()
+        .padding(.horizontal, 10)
+        .padding(.vertical, 40)
         .font(.system(size: 20))
     }
     
     @ViewBuilder var downloadWithView:some View {
-        VStack(alignment:.leading){
+        
+        VStack(alignment:.leading) {
             Text("Download with:").bold()
             Button(action: {
                 viewModel.setDownloadWithWifi()
@@ -103,11 +97,9 @@ extension SettingsView {
                     Spacer()
                     Image(systemName: "wifi")
                 }
-                .foregroundColor(ThemeService.themeColor)
+                .foregroundColor(Color(uiColor: .label))
             })
-            .padding(.all,20)
-            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
-            
+                .padding(10)
             
             Button(action: {
                 viewModel.setDownloadWithCellularAndWifi()
@@ -119,11 +111,9 @@ extension SettingsView {
                     Image(systemName: "candybarphone")
                     Image(systemName: "wifi")
                 }
-                .foregroundColor(ThemeService.themeColor)
+                .foregroundColor(Color(uiColor: .label))
             })
-            .padding(.all,20)
-            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
-            
+                .padding(10)
         }
         .font(.system(size: 20))
         .padding(.horizontal,10)
@@ -138,6 +128,10 @@ extension SettingsView {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView()
+        Group {
+            SettingsView()
+            SettingsView()
+                .preferredColorScheme(.dark)
+        }
     }
 }

@@ -13,76 +13,64 @@ struct PlayerCellView: View {
     var body: some View {
         VStack(spacing:0) {
             ZStack(alignment:.leading) {
+                // Audio Progress Bar
                 GeometryReader { geometry in
                     Rectangle().frame(height: 5)
-                        .foregroundColor(ThemeService.borderColor)
-                    Rectangle().frame(width:geometry.size.width * viewModel.sliderValue,height: 5)
-                        .foregroundColor(ThemeService.indigo)
-                }.frame(height: 5)
-            }
-            HStack {
-                ZStack {
-                    titleBox
-                    ZStack {
-                        if viewModel.isPlaying {
-                            Image(systemName: "speaker.wave.2")
-                                .foregroundColor(ThemeService.whiteColor)
-                                .font(.system(size: 25))
-                        }else {
-                            Text("\(viewModel.currentChapter?.index ?? 0)")
-                                .font(.system(size: 25))
-                                .foregroundColor(ThemeService.whiteColor)
-                        }
-                    }
+                        .foregroundColor(Color(uiColor: .tertiarySystemBackground))
+                    Rectangle().frame(width:geometry.size.width * viewModel.sliderValue, height: 5)
+                        .foregroundColor(ThemeService.themeColor)
                 }
-                HStack {
-                    HStack {
-                        VStack(alignment:.leading) {
-                            VStack(alignment: .leading,spacing: 0) {
-                                Text("سورَة \(viewModel.currentChapter?.name ?? "")")
-                                    .foregroundColor(ThemeService.whiteColor)
-                                    .font(ThemeService.shared.arabicFont(size: 23).bold())
-                                .offset(y:3)
-                                
-                                Text("Surah \(viewModel.currentChapter?.nameTrans ?? "")")
-                                    .foregroundColor(ThemeService.whiteColor.opacity(0.7))
-                                    .font(ThemeService.shared.translationFont(size: 15))
-                                    .offset(y:-3)
-                            }
-                        }
-                        Spacer(minLength: 10)
-                    }
-                    ZStack {
-                        if viewModel.isBuffering {
-                            LoaderView()
-                        }
-                        Image(systemName: viewModel.isPlaying ? "pause" : "play")
-                            .foregroundColor(ThemeService.whiteColor)
-                            .font(.system(size: 30))
-                            .frame(width: 40,height: 40).onTapGesture {
-                                viewModel.playPause()
-                            }
-                        
-                    }
-                }
+                .frame(height: 5)
             }
-            .background(ThemeService.themeColor)
             
+            HStack {
+                Text("\(viewModel.currentChapter?.index ?? 0)")
+                    .font(.system(size: 17))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+                    .frame(width: 30, height: 70, alignment: .center)
+                HStack {
+                    VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("سورَة \(viewModel.currentChapter?.name ?? "")")
+                                .foregroundColor(Color(uiColor: .label))
+                                .font(ThemeService.shared.arabicFont(size: 17))
+                            Text("Surah \(viewModel.currentChapter?.nameTrans ?? "")")
+                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                                .font(ThemeService.shared.translationFont(size: 15))
+                        }
+                    }
+                    Spacer(minLength: 8)
+                }
+                ZStack {
+                    if viewModel.isBuffering {
+                        LoaderView()
+                    }
+                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                        .foregroundColor(Color(uiColor: .label))
+                        .font(.system(size: 25))
+                        .frame(width: 50, height: 50)
+                        .onTapGesture {
+                            viewModel.playPause()
+                        }
+                }
+                .padding(10)
+            }
+            .background(ThemeService.indigo.opacity(0.5))
+            .frame(height: 70)
         }
         .onAppear(perform: {
             viewModel.subscribeAudioNotification()
         }).onDisappear(perform: {
             viewModel.unSubscribeAudioNotification()
         })
-        .frame(height: 59)
     }
     
     @ViewBuilder private var titleBox: some View {
         HStack(spacing:0) {
             Rectangle().frame(width: 50,height: 50)
                 .foregroundColor(ThemeService.themeColor)
-            Rectangle().frame(width: 1,height: 50)
-                .foregroundColor(ThemeService.whiteColor)
+            //            Rectangle().frame(width: 1,height: 50)
+            //                .foregroundColor(ThemeService.whiteColor)
         }
     }
     
