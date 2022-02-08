@@ -11,7 +11,7 @@ public class ThemeService {
     public static let secondaryColor = Color("secondaryColor")
     public static let indigo = Color("indigo")
     public static let red = Color("red")
-    public static let whiteColor = Color.white
+    public static let whiteColor = Color(UIColor.systemBackground)
     public static var themeColor = Color("theme")
     public static let subTitleColor = Color("subTitle")
     public static let titleColor = Color("title")
