@@ -39,17 +39,13 @@ struct ChapterListView: View {
                             PlayerCellView(viewModel: playerCellViewModel)
                                 .onTapGesture {
                                     showFullPlayer.toggle()
-//                                    fullPlayerFrameHeight = 400
-//                                    fullPlayerOpacity = 1
                                 }
                         }
                         TabBarView(viewModel: viewModel)
-                        //.background(ThemeService.themeColor)
                     }
                 }
             }
             .sheet(isPresented: $showFullPlayer, onDismiss: {
-//                showFullPlayer.toggle()
             }, content: {
                 FullPlayerView()
             })
@@ -59,10 +55,8 @@ struct ChapterListView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: SettingsView()) {
                         Image(systemName: "circle.grid.cross")
-//                            .rotationEffect(Angle(degrees: 45))
                             .tint(ThemeService.themeColor)
                             .frame(width: 44, height: 44)
-                        //.font(.system(size: 20))
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
@@ -70,50 +64,8 @@ struct ChapterListView: View {
                 }
                 
             }
-            //            .navigatorView(title: "Quran") {
-            //                if UIDevice.current.userInterfaceIdiom == .pad {
-            //                    Button {
-            //                        print("Download Button")
-            //                        showingDownloadSheet = true
-            //                    } label: {
-            //                        Image(systemName: "icloud.and.arrow.down")
-            //                            .font(.system(size: 20))
-            //                    }
-            //                    .sheet(isPresented: $showingDownloadSheet) {
-            //                        showingDownloadSheet = false
-            //                    } content: {
-            //                        DownloadQueueView()
-            //                    }
-            //                }else {
-            //                    NavigationLink(destination: DownloadQueueView()) {
-            //                        Image(systemName: "icloud.and.arrow.down")
-            //                            .font(.system(size: 22))
-            //                    }
-            //                }
-            //            } rightItems: {
-            //                if UIDevice.current.userInterfaceIdiom == .pad {
-            //                    Button {
-            //                        print("Settings Button")
-            //                        showingSettingsSheet = true
-            //                    } label: {
-            //                        Image(systemName: "gearshape")
-            //                            .font(.system(size: 20))
-            //                    }
-            //                    .sheet(isPresented: $showingSettingsSheet) {
-            //                        showingSettingsSheet = false
-            //                    } content: {
-            //                        SettingsView()
-            //                    }
-            //                }else {
-            //                    NavigationLink(destination: SettingsView()) {
-            //                        Image(systemName: "gearshape")
-            //                            .font(.system(size: 20))
-            //                    }
-            //                }
-            //            }
             
         }
-        //.background(ThemeService.themeColor)
         .toast(showToast: $showToast,
                title: toastTitle,
                description: toastDescriptiom,
@@ -142,7 +94,6 @@ struct ChapterListView: View {
             Spacer(minLength: 5)
             ForEach(viewModel.chapters, id: \.index) { chapter in
                 ChapterCell(onFavourite: { chapter in
-                    
                     if viewModel.isFavourite(chapter: chapter) {
                         toastType = .info
                         toastTitle = "Removed from favourites"
@@ -173,17 +124,15 @@ struct ChapterListView: View {
                         self.showToast = true
                     }
                 },
+                            currentChapter: $viewModel.currentChapter,
                             chapter: chapter)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         self.viewModel.setCurrent(chapter: chapter)
-                        //TODO: Show full player
-                        
                     }
             }
             Spacer(minLength: 5)
         }
-        //.background(ThemeService.whiteColor)
     }
     
     

@@ -9,9 +9,9 @@ import SwiftUI
 
 public struct ChapterCell:View {
     @ObservedObject var viewModel = ChapterListViewModel()
-    @State var showSwipeButtons:Bool = false
     var onFavourite:(ChapterModel) -> Void = { _ in }
     var onDownload:(ChapterModel) -> Void = { _ in }
+    @Binding var currentChapter:ChapterModel?
     
     var chapter:ChapterModel
     public var body: some View {
@@ -40,50 +40,18 @@ public struct ChapterCell:View {
                                 .foregroundColor(Color(UIColor.secondaryLabel))
                         }
                         Spacer()
-                        Button {
-                            viewModel.setCurrent(chapter: chapter)
-//                            showSwipeButtons.toggle()
-                        } label: {
-                            Image(systemName: (chapter.isPlaying ?? false) ? "waveform" : "play")
+                        if (currentChapter?.index ?? 0) == chapter.index {
+                            Image(systemName: "waveform")
                                 .font(.system(size: 20))
                                 .frame(width: 60, height: 70)
                                 .foregroundColor(ThemeService.themeColor)
+                        }else {
+                            Color.clear
                         }
                     }
                 }
                 .background(Color(UIColor.systemBackground))
-//                .offset(x: showSwipeButtons ? -88 : 0)
-//                .animation(.spring(dampingFraction: 0.5),
-//                           value: showSwipeButtons)
             }
-//            if showSwipeButtons {
-//                HStack(spacing:0){
-//                    ZStack {
-//                        Rectangle()
-//                            .fill(ThemeService.themeColor.opacity(0.8))
-//                            .frame(width: 44, height: 44)
-//                        Button {
-//                            onDownload(chapter)
-//                            showSwipeButtons.toggle()
-//                        } label: {
-//                            let isDownloaded = DataService.shared.isDownloaded(index: chapter.index)
-//                            Image(systemName: isDownloaded ? "checkmark.icloud.fill" : "icloud.and.arrow.down")
-//                        }
-//                    }
-//                    ZStack {
-//                        Rectangle()
-//                            .fill(ThemeService.themeColor.opacity(0.7))
-//                            .frame(width: 44, height: 44)
-//                        Button {
-//                            onFavourite(chapter)
-//                            showSwipeButtons.toggle()
-//                        } label: {
-//                            let isFavourite = DataService.shared.isFavourite(index: chapter.index)
-//                            Image(systemName: isFavourite ? "star.fill": "star")
-//                        }
-//                    }
-//                }.foregroundColor(ThemeService.whiteColor)
-//            }
             
         }.foregroundColor(ThemeService.themeColor)
             .padding(.horizontal,7)
@@ -91,21 +59,38 @@ public struct ChapterCell:View {
 }
 
 struct ChapterCell_Previews: PreviewProvider {
+    let chapter  = ChapterModel(index: 1,
+                                name: "ٱلْفَاتِحَة",
+                                nameTrans: "Al-Fatihah",
+                                fileName: "000_Al_Fattiha.mp3",
+                                size: "768Kb",
+                                durationInSecs: 98)
     static var previews: some View {
         Group {
-            ChapterCell(chapter:ChapterModel(index: 1,
+            ChapterCell(currentChapter: .constant(ChapterModel(index: 1,
+                                                               name: "ٱلْفَاتِحَة",
+                                                               nameTrans: "Al-Fatihah",
+                                                               fileName: "000_Al_Fattiha.mp3",
+                                                               size: "768Kb",
+                                                               durationInSecs: 98)),
+                        chapter:ChapterModel(index: 1,
                                              name: "ٱلْفَاتِحَة",
                                              nameTrans: "Al-Fatihah",
                                              fileName: "000_Al_Fattiha.mp3",
                                              size: "768Kb",
                                              durationInSecs: 98))
-            ChapterCell(chapter:ChapterModel(index: 1,
+            ChapterCell(currentChapter: .constant(ChapterModel(index: 1,
+                                                               name: "ٱلْفَاتِحَة",
+                                                               nameTrans: "Al-Fatihah",
+                                                               fileName: "000_Al_Fattiha.mp3",
+                                                               size: "768Kb",
+                                                               durationInSecs: 98)),
+                        chapter:ChapterModel(index: 1,
                                              name: "ٱلْفَاتِحَة",
                                              nameTrans: "Al-Fatihah",
                                              fileName: "000_Al_Fattiha.mp3",
                                              size: "768Kb",
                                              durationInSecs: 98))
-                .preferredColorScheme(.dark)
         }
     }
 }
