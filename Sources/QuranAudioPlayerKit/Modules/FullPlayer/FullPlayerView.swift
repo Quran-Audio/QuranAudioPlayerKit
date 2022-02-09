@@ -8,9 +8,22 @@ import SwiftUI
 
 struct FullPlayerView: View {
     @ObservedObject private var viewModel = FullPlayerViewModel()
-
+    @Binding var showFullPlayer: Bool
+    
     var body: some View {
         VStack (alignment: .center, spacing: 20) {
+            HStack {
+                Spacer()
+                Button {
+                    showFullPlayer.toggle()
+                } label: {
+                    Image(systemName: "xmark")
+                        .padding()
+                        .background(Color(uiColor: .tertiaryLabel).opacity(0.7))
+                        .foregroundColor(Color(uiColor: .label))
+                        .clipShape(Circle())
+                }
+            }.padding()
             GeometryReader { geo in
                 Image(systemName: "sparkles")
                     .resizable()
@@ -138,11 +151,12 @@ struct LoaderView:View {
 }
 
 struct FullPlayerView_Previews: PreviewProvider {
+    @State private static var showFullPlayer = true
     static var previews: some View {
         Group {
-            FullPlayerView()
+            FullPlayerView(showFullPlayer: $showFullPlayer)
                 .previewDevice("iPhone 13 mini")
-            FullPlayerView()
+            FullPlayerView(showFullPlayer: $showFullPlayer)
                 .preferredColorScheme(.dark)
                 .previewDevice("iPhone 13 mini")
         }
