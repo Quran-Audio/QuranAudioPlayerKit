@@ -13,7 +13,6 @@ struct PlayerCellView: View {
     var body: some View {
         VStack(spacing:0) {
             ZStack(alignment:.leading) {
-                // Audio Progress Bar
                 GeometryReader { geometry in
                     Rectangle().frame(height: 5)
                         .foregroundColor(Color(uiColor: .tertiarySystemBackground))
@@ -46,7 +45,7 @@ struct PlayerCellView: View {
                         LoaderView()
                     }
                     Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                        .foregroundColor(Color(uiColor: .label))
+                        .foregroundColor(ThemeService.themeColor)
                         .font(.system(size: 25))
                         .frame(width: 50, height: 50)
                         .onTapGesture {

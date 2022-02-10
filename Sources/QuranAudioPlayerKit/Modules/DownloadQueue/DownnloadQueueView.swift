@@ -46,12 +46,6 @@ struct DownloadQueueView: View {
                 }
             }
             .foregroundColor(ThemeService.themeColor)
-            .navigatorView(title: "Download Manager",
-                           showBackButton: true) {
-                Text("").opacity(0)
-            } rightItems: {
-                Text("").opacity(0)
-            }
             .toast(showToast: $showToast,
                    title: "Warning",
                    description: toastDescription,
@@ -59,9 +53,8 @@ struct DownloadQueueView: View {
                    alignment: .center)
 
         }
-        .navigationBarTitle("")
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
+        .foregroundColor(Color(uiColor: .label))
+        .navigationTitle("Download Manager")
         
     }
     

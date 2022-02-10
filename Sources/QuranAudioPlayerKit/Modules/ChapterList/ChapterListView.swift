@@ -49,7 +49,6 @@ struct ChapterListView: View {
             }, content: {
                 FullPlayerView()
             })
-            
             .navigationTitle("Quran Audio")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -59,8 +58,12 @@ struct ChapterListView: View {
                             .frame(width: 44, height: 44)
                     }
                 }
-                ToolbarItem(placement: .bottomBar) {
-                    
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink(destination: DownloadQueueView()) {
+                        Image(systemName: "icloud.and.arrow.down")
+                            .tint(ThemeService.themeColor)
+                            .frame(width: 44, height: 44)
+                    }
                 }
                 
             }
@@ -93,39 +96,7 @@ struct ChapterListView: View {
         VStack(spacing:1) {
             Spacer(minLength: 5)
             ForEach(viewModel.chapters, id: \.index) { chapter in
-                ChapterCell(onFavourite: { chapter in
-                    if viewModel.isFavourite(chapter: chapter) {
-                        toastType = .info
-                        toastTitle = "Removed from favourites"
-                        toastDescriptiom = ""
-                    }else {
-                        toastType = .info
-                        toastTitle = "Added to favourites"
-                        toastDescriptiom = ""
-                    }
-                    self.showToast = true
-                    viewModel.onFavouriteChapter(chapterIndex: chapter.index)
-                },
-                            onDownload: { chapter in
-                    if viewModel.isDownloaded(chapter: chapter) {
-                        toastType = .alert
-                        toastTitle = "Warning"
-                        toastDescriptiom = "Permanently delete the file?"
-                        self.showToast = true
-                        onToastConfirm = {
-                            viewModel.deleteChapter(chapter: chapter)
-                            self.showToast = false
-                        }
-                    }else {
-                        toastType = .info
-                        toastTitle = "Added to download queue."
-                        viewModel.addToDownloadQueue(chapter: chapter)
-                        toastDescriptiom = ""
-                        self.showToast = true
-                    }
-                },
-                            currentChapter: $viewModel.currentChapter,
-                            chapter: chapter)
+                ChapterCell(chapter: chapter)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         self.viewModel.setCurrent(chapter: chapter)
@@ -197,3 +168,38 @@ struct ChapterListView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+
+
+//onFavourite: { chapter in
+//if viewModel.isFavourite(chapter: chapter) {
+//    toastType = .info
+//    toastTitle = "Removed from favourites"
+//    toastDescriptiom = ""
+//}else {
+//    toastType = .info
+//    toastTitle = "Added to favourites"
+//    toastDescriptiom = ""
+//}
+//self.showToast = true
+//viewModel.onFavouriteChapter(chapterIndex: chapter.index)
+//},
+//        onDownload: { chapter in
+//if viewModel.isDownloaded(chapter: chapter) {
+//    toastType = .alert
+//    toastTitle = "Warning"
+//    toastDescriptiom = "Permanently delete the file?"
+//    self.showToast = true
+//    onToastConfirm = {
+//        viewModel.deleteChapter(chapter: chapter)
+//        self.showToast = false
+//    }
+//}else {
+//    toastType = .info
+//    toastTitle = "Added to download queue."
+//    viewModel.addToDownloadQueue(chapter: chapter)
+//    toastDescriptiom = ""
+//    self.showToast = true
+//}
+//},
+//        
+//        

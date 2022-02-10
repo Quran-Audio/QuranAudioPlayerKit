@@ -10,7 +10,9 @@ import UIKit
 public class DownloadService: NSObject,URLSessionDownloadDelegate {
     public var currentChapter:ChapterModel? {downloadList.first}
     private var baseUrl:String = DataService.shared.baseUrl
-    public var downloadList:[ChapterModel] = []
+    public var downloadList:[ChapterModel] {
+        DataService.shared.getChaptersInDownloadQueue()
+    }
     public static var shared = DownloadService()
     private override init() {}
     private var task:URLSessionDownloadTask?
@@ -161,17 +163,12 @@ extension DownloadService {
     }
     
     public func addToDownloadQueue(chapter:ChapterModel) {
-        if downloadList.firstIndex(of: chapter) == nil {
-            downloadList.append(chapter)
-        }
+        DataService.shared.addToDownloadQueue(index: chapter.index)
     }
     
     public func removeFromDownloadQueue(chapter:ChapterModel?) {
         guard let chapter = chapter else {return}
-
-        if let index = downloadList.firstIndex(of: chapter) {
-            downloadList.remove(at: index)
-        }
+        DataService.shared.removeFromDownloadQueue(index: chapter.index)
     }
     
     public func processDownloadQueue() {
