@@ -18,6 +18,7 @@ public class ThemeService {
     public static let subTitleColor = Color("subTitle")
     public static let titleColor = Color("title")
     public static let borderColor = Color("borderColor")
+    public static let lableColor = Color(UIColor.label)
         
     public static let shared = ThemeService()
     private init() {}
