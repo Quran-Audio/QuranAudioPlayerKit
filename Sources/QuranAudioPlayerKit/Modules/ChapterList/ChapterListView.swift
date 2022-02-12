@@ -48,10 +48,8 @@ struct ChapterListView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showFullPlayer, onDismiss: {
-//                showFullPlayer.toggle()
-            }, content: {
-                FullPlayerView()
+            .sheet(isPresented: $showFullPlayer) {
+                FullPlayerView(showFullPlayer: $showFullPlayer)
             })
             
             .navigationTitle("Quran Audio")
