@@ -29,7 +29,7 @@ struct DownloadQueueView: View {
                         Divider()
                         Spacer(minLength: 20)
                         ScrollView {
-                            VStack(spacing:15) {
+                            VStack(spacing:1) {
                                 Section("Download Queue"){
                                     ForEach(viewModel.downloadQueue, id: \.index) { chapter in
                                         DownloadQueueCell(viewModel: viewModel,
@@ -62,34 +62,47 @@ struct DownloadQueueView: View {
         @ObservedObject var viewModel:DownloadQueueViewModel
         var chapter:ChapterModel
         var body: some View {
-            ZStack {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(ThemeService.borderColor,lineWidth: 2)
-                HStack {
-                    VStack(alignment:.leading) {
-                        Text("\(chapter.index). \(chapter.name) ")
-                            .foregroundColor(ThemeService.themeColor)
-                            .font(ThemeService.shared.arabicFont(size: 20))
-                        Text(chapter.nameTrans)
-                            .foregroundColor(ThemeService.themeColor.opacity(0.7))
-                            .font(ThemeService.shared.translationFont(size: 18))
-                            .offset(x:20,y:-5)
-                        
-                    }.padding(.horizontal)
-                    Spacer()
-                    Text("\(chapter.size)B")
-                        .foregroundColor(ThemeService.themeColor.opacity(0.8))
-                        .font(.system(size: 15))
-                    Button {
-                        viewModel.removeFromDownloadQueueList(chapter: chapter)
-                    } label: {
-                        Image(systemName: "xmark.circle")
-                            .font(.system(size: 20))
-                            .foregroundColor(ThemeService.red)
-                            .padding(.horizontal)
-                    }.frame(width: 44, height: 55)
-                }.padding(.all,5)
-            }.padding(.horizontal,20)
+            HStack {
+                ZStack {
+                    Rectangle()
+                        .fill(ThemeService.themeColor.opacity(0.1))
+                        .frame(height: 70)
+                    HStack {
+                        ZStack {
+                            Rectangle()
+                                .fill(ThemeService.themeColor.opacity(0.2))
+                                .frame(width: 40, height: 70, alignment: .leading)
+                            
+                            Text("\(chapter.index)")
+                                .foregroundColor(Color(UIColor.label.withAlphaComponent(0.5)))
+                                .font(.system(size: 17))
+                        }
+                        VStack(alignment:.leading, spacing: 5) {
+                            Text(chapter.name)
+                                .font(ThemeService.shared.arabicFont(size: 17))
+                                .foregroundColor(Color(UIColor.label))
+                            Text(chapter.nameTrans)
+                                .font(.system(size: 15))
+                                .foregroundColor(Color(UIColor.secondaryLabel))
+                        }
+                        Spacer()
+                        Text("\(chapter.size)B")
+                            .foregroundColor(ThemeService.themeColor.opacity(0.8))
+                            .font(.system(size: 15))
+                        Button {
+                            viewModel.removeFromDownloadQueueList(chapter: chapter)
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .font(.system(size: 20))
+                                .foregroundColor(ThemeService.red)
+                                .padding(.horizontal)
+                        }.frame(width: 44, height: 55)
+                    }
+                }
+                .background(Color(UIColor.systemBackground))
+                
+            }.foregroundColor(ThemeService.themeColor)
+                .padding(.horizontal,7)
             
         }
     }

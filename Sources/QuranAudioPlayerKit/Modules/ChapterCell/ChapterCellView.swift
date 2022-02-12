@@ -15,41 +15,39 @@ public struct ChapterCell:View {
     }
     
     public var body: some View {
-        ZStack(alignment: .trailing) {
-            HStack {
-                ZStack {
-                    Rectangle()
-                        .fill(ThemeService.themeColor.opacity(0.1))
-                        .frame(height: 70)
-                    HStack {
-                        ZStack {
-                            Rectangle()
-                                .fill(ThemeService.themeColor.opacity(0.2))
-                                .frame(width: 40, height: 70, alignment: .leading)
-                            
-                            Text("\(viewModel.chapter.index)")
-                                .foregroundColor(Color(UIColor.label.withAlphaComponent(0.5)))
-                                .font(.system(size: 17))
-                        }
-                        VStack(alignment:.leading, spacing: 5) {
-                            Text(viewModel.chapter.name)
-                                .font(ThemeService.shared.arabicFont(size: 17))
-                                .foregroundColor(Color(UIColor.label))
-                            Text(viewModel.chapter.nameTrans)
-                                .font(.system(size: 15))
-                                .foregroundColor(Color(UIColor.secondaryLabel))
-                        }
-                        Spacer()
-                        if viewModel.isCurrentChapter {
-                            Image(systemName: "waveform")
-                                .font(.system(size: 20))
-                                .frame(width: 60, height: 70)
-                                .foregroundColor(ThemeService.themeColor)
-                        }
+        HStack {
+            ZStack {
+                Rectangle()
+                    .fill(ThemeService.themeColor.opacity(0.1))
+                    .frame(height: 70)
+                HStack {
+                    ZStack {
+                        Rectangle()
+                            .fill(ThemeService.themeColor.opacity(0.2))
+                            .frame(width: 40, height: 70, alignment: .leading)
+                        
+                        Text("\(viewModel.chapter.index)")
+                            .foregroundColor(Color(UIColor.label.withAlphaComponent(0.5)))
+                            .font(.system(size: 17))
+                    }
+                    VStack(alignment:.leading, spacing: 5) {
+                        Text(viewModel.chapter.name)
+                            .font(ThemeService.shared.arabicFont(size: 17))
+                            .foregroundColor(Color(UIColor.label))
+                        Text(viewModel.chapter.nameTrans)
+                            .font(.system(size: 15))
+                            .foregroundColor(Color(UIColor.secondaryLabel))
+                    }
+                    Spacer()
+                    if viewModel.isCurrentChapter {
+                        Image(systemName: "waveform")
+                            .font(.system(size: 20))
+                            .frame(width: 60, height: 70)
+                            .foregroundColor(ThemeService.themeColor)
                     }
                 }
-                .background(Color(UIColor.systemBackground))
             }
+            .background(Color(UIColor.systemBackground))
             
         }.foregroundColor(ThemeService.themeColor)
             .padding(.horizontal,7)
