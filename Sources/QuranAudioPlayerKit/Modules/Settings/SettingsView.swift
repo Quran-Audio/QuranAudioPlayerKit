@@ -20,6 +20,7 @@ struct SettingsView: View {
                     downloadWithView
                 }
                 emailView
+                addToDownloadQueueView
                 shareView
                 Spacer()
             }
@@ -31,6 +32,23 @@ struct SettingsView: View {
 
 //MARK: Download With
 extension SettingsView {
+    @ViewBuilder var addToDownloadQueueView:some View {
+        VStack(alignment:.leading) {
+            HStack{
+                Image(systemName:viewModel.downloadWithPlay ? "checkmark.square":"square")
+                Text("Add to download queue while playing")
+                Spacer()
+            }
+            .contentShape(Rectangle())
+            .padding(.horizontal,10)
+            .onTapGesture {
+                viewModel.setDownloadWhilePlay()
+            }
+        }
+        .padding(.horizontal, 10)
+        .font(.system(size: 20))
+    }
+        
     @ViewBuilder var shareView:some View {
         VStack(alignment:.leading) {
             Button(action: {
@@ -50,9 +68,6 @@ extension SettingsView {
     }
     @ViewBuilder var emailView:some View {
         VStack(alignment:.leading) {
-//            Text("Email:")
-//                .font(.system(size: 20)).bold()
-//                .padding(.vertical, 20)
             Button(action: {
                 if MFMailComposeViewController.canSendMail() {
                     self.isShowingMailView.toggle()
@@ -77,7 +92,6 @@ extension SettingsView {
                             MailView(result: self.$result)
                         }
                 .padding(10)
-                //.overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 40)

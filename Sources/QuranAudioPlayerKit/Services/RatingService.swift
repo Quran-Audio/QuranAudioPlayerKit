@@ -6,30 +6,25 @@
 //
 
 import Foundation
-import StoreKit
 
 public class RatingService {
     public static var shared = RatingService()
     private init() {}
-    
     private let appLaunchCountKey:String = "app-launch-count-key"
-    public func checkAndAskForReview() {
-        let incrementedAppLaunchCount = incrementAppLaunchCount()
+    
+    public func shouldRequest() -> Bool {
+        let launchCount = incrementAppLaunchCount()
         
-        switch incrementedAppLaunchCount {
+        switch launchCount {
         case 7:
-            requestReview()
-        case _ where incrementedAppLaunchCount%100 == 0 :
-            requestReview()
+            return true
+        case _ where launchCount%100 == 0 :
+            return true
         default:
-            print("App run count is : \(incrementedAppLaunchCount)")
+            print("App run count is : \(launchCount)")
             break;
         }
-        
-    }
-    
-    private func requestReview() {
-        SKStoreReviewController.requestReviewInCurrentScene()
+        return false
     }
     
     private func incrementAppLaunchCount() -> Int {
@@ -38,19 +33,10 @@ public class RatingService {
             UserDefaults.standard.synchronize()
             return 1
         }
-        print(appLaunchCount)
-        UserDefaults.standard.set(appLaunchCount+1, forKey: self.appLaunchCountKey)
+        let newLanchCount = appLaunchCount + 1
+        UserDefaults.standard.set(newLanchCount, forKey: self.appLaunchCountKey)
         UserDefaults.standard.synchronize()
-        return appLaunchCount
+        return newLanchCount
     }
 }
-
-extension SKStoreReviewController {
-    public static func requestReviewInCurrentScene() {
-        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-            requestReview(in: scene)
-        }
-    }
-}
-
 

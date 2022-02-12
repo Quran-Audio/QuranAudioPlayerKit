@@ -20,98 +20,58 @@ struct ChapterListView: View {
     @State var toastType:ToastView.ToasType = .info
     @State var onToastConfirm:(() -> Void)?
     @State var showFullPlayer: Bool = false
+    @State var navigateChapterSelection: Int? = nil
     
     var body: some View {
         NavigationView {
             VStack {
                 ZStack(alignment:.bottom) {
                     VStack(spacing:0)  {
-                        ScrollView {
-                            if viewModel.chapters.count == 0 {
-                                Spacer(minLength: 20)
-                                emptyListView
-                                Spacer()
-                            }else {
-                                chapterListView
+                        if viewModel.chapters.count == 0 {
+                            Spacer(minLength: 20)
+                            emptyListView
+                            Spacer()
+                        }else {
+                            chapterListView
+                        }
+                        
+                        if AudioService.shared.isCurrentChapterAvailable() {
+                            if TargetDevice.currentDevice != .nativeMac {
+                                PlayerCellView(viewModel: playerCellViewModel)
+                                    .onTapGesture {
+                                        showFullPlayer.toggle()
+                                    }
                             }
                         }
-                        if AudioService.shared.isCurrentChapterAvailable() {
-                            PlayerCellView(viewModel: playerCellViewModel)
-                                .onTapGesture {
-                                    showFullPlayer.toggle()
-//                                    fullPlayerFrameHeight = 400
-//                                    fullPlayerOpacity = 1
-                                }
-                        }
                         TabBarView(viewModel: viewModel)
-                        //.background(ThemeService.themeColor)
                     }
                 }
             }
-            .sheet(isPresented: $showFullPlayer) {
-                FullPlayerView(showFullPlayer: $showFullPlayer)
+            .sheet(isPresented: $showFullPlayer, onDismiss: {
+            }, content: {
+                FullPlayerView()
             })
-            
             .navigationTitle("Quran Audio")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: SettingsView()) {
                         Image(systemName: "circle.grid.cross")
-//                            .rotationEffect(Angle(degrees: 45))
                             .tint(ThemeService.themeColor)
                             .frame(width: 44, height: 44)
-                        //.font(.system(size: 20))
                     }
                 }
-                ToolbarItem(placement: .bottomBar) {
-                    
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink(destination: DownloadQueueView()) {
+                        Image(systemName: "icloud.and.arrow.down")
+                            .tint(ThemeService.themeColor)
+                            .frame(width: 44, height: 44)
+                    }
                 }
                 
             }
-            //            .navigatorView(title: "Quran") {
-            //                if UIDevice.current.userInterfaceIdiom == .pad {
-            //                    Button {
-            //                        print("Download Button")
-            //                        showingDownloadSheet = true
-            //                    } label: {
-            //                        Image(systemName: "icloud.and.arrow.down")
-            //                            .font(.system(size: 20))
-            //                    }
-            //                    .sheet(isPresented: $showingDownloadSheet) {
-            //                        showingDownloadSheet = false
-            //                    } content: {
-            //                        DownloadQueueView()
-            //                    }
-            //                }else {
-            //                    NavigationLink(destination: DownloadQueueView()) {
-            //                        Image(systemName: "icloud.and.arrow.down")
-            //                            .font(.system(size: 22))
-            //                    }
-            //                }
-            //            } rightItems: {
-            //                if UIDevice.current.userInterfaceIdiom == .pad {
-            //                    Button {
-            //                        print("Settings Button")
-            //                        showingSettingsSheet = true
-            //                    } label: {
-            //                        Image(systemName: "gearshape")
-            //                            .font(.system(size: 20))
-            //                    }
-            //                    .sheet(isPresented: $showingSettingsSheet) {
-            //                        showingSettingsSheet = false
-            //                    } content: {
-            //                        SettingsView()
-            //                    }
-            //                }else {
-            //                    NavigationLink(destination: SettingsView()) {
-            //                        Image(systemName: "gearshape")
-            //                            .font(.system(size: 20))
-            //                    }
-            //                }
-            //            }
             
         }
-        //.background(ThemeService.themeColor)
+        .deviceNavigationViewStyle()
         .toast(showToast: $showToast,
                title: toastTitle,
                description: toastDescriptiom,
@@ -136,53 +96,50 @@ struct ChapterListView: View {
     }
     
     @ViewBuilder private var chapterListView: some View {
+        let navigation = NavigationLink(destination: FullPlayerView(),
+                                        tag: 10,
+                                        selection: $navigateChapterSelection) { Color.clear }
         VStack(spacing:1) {
-            Spacer(minLength: 5)
-            ForEach(viewModel.chapters, id: \.index) { chapter in
-                ChapterCell(onFavourite: { chapter in
-                    
-                    if viewModel.isFavourite(chapter: chapter) {
-                        toastType = .info
-                        toastTitle = "Removed from favourites"
-                        toastDescriptiom = ""
-                    }else {
-                        toastType = .info
-                        toastTitle = "Added to favourites"
-                        toastDescriptiom = ""
-                    }
-                    self.showToast = true
-                    viewModel.onFavouriteChapter(chapterIndex: chapter.index)
-                },
-                            onDownload: { chapter in
-                    if viewModel.isDownloaded(chapter: chapter) {
-                        toastType = .alert
-                        toastTitle = "Warning"
-                        toastDescriptiom = "Permanently delete the file?"
-                        self.showToast = true
-                        onToastConfirm = {
-                            viewModel.deleteChapter(chapter: chapter)
-                            self.showToast = false
-                        }
-                    }else {
-                        toastType = .info
-                        toastTitle = "Added to download queue."
-                        viewModel.addToDownloadQueue(chapter: chapter)
-                        toastDescriptiom = ""
-                        self.showToast = true
-                    }
-                },
-                            chapter: chapter)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        self.viewModel.setCurrent(chapter: chapter)
-                        //TODO: Show full player
-                        
-                    }
+            if TargetDevice.currentDevice == .nativeMac {
+                navigation.frame(height: 0)
             }
-            Spacer(minLength: 5)
+            List {
+                ForEach(viewModel.chapters, id: \.index) { chapter in
+                    ChapterCell(chapter: chapter)
+                        .contentShape(Rectangle())
+                        .swipeActions(edge: .trailing,
+                                      allowsFullSwipe: false,
+                                      content: {
+                            Button {
+                                onFavourite(chapter: chapter)
+                            } label: {
+                                Image(systemName: viewModel.favouriteImage(chapter: chapter))
+                            }.tint(ThemeService.yellow)
+                            
+                            Button {
+                                onDownload(chapter: chapter)
+                            } label: {
+                                Image(systemName:viewModel.downloadImage(chapter: chapter))
+                            }.tint(ThemeService.green)
+                        })
+                        .onTapGesture {
+                            self.viewModel.setCurrent(chapter: chapter)
+                            if TargetDevice.currentDevice == .nativeMac {
+                                self.navigateChapterSelection = 10
+                            }
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(.init(top: 0,
+                                             leading: 0,
+                                             bottom: 1,
+                                             trailing: 0))
+                }
+            }
+            .background(.clear)
+            .listStyle(.grouped)
         }
-        //.background(ThemeService.whiteColor)
     }
+    
     
     
     struct TabBarView: View {
@@ -239,6 +196,59 @@ struct ChapterListView: View {
     
 }
 
+//MARK: Toast Action
+extension ChapterListView {
+    func onFavourite(chapter:ChapterModel) {
+        if viewModel.isFavourite(chapter: chapter) {
+            toastType = .info
+            toastTitle = "Removed from favourites"
+            toastDescriptiom = ""
+        }else {
+            toastType = .info
+            toastTitle = "Added to favourites"
+            toastDescriptiom = ""
+        }
+        self.showToast = true
+        viewModel.onFavouriteChapter(chapterIndex: chapter.index)
+    }
+    
+    func onDownload(chapter:ChapterModel) {
+        if viewModel.isDownloaded(chapter: chapter) {
+            toastType = .alert
+            toastTitle = "Warning"
+            toastDescriptiom = "Permanently delete the file?"
+            self.showToast = true
+            onToastConfirm = {
+                viewModel.deleteChapter(chapter: chapter)
+                self.showToast = false
+            }
+        }else {
+            if viewModel.isDownloadQueueEmpty(),
+               viewModel.isDownloadWithWifiOnly() {
+                toastType = .alert
+                toastTitle = "Warning"
+                toastDescriptiom = "Start Download using Cellular?"
+                onToastConfirm = {
+                    viewModel.setDownloadWithCellularAndWifi()
+                    self.showToast = false
+                }
+            }else if viewModel.isInDownloadQueue(chapter: chapter){
+                toastType = .info
+                toastTitle = "Removed from download queue."
+                toastDescriptiom = ""
+            }else {
+                toastType = .info
+                toastTitle = "Added to download queue."
+                toastDescriptiom = ""
+            }
+            
+            viewModel.addToDownloadQueue(chapter: chapter)
+            self.showToast = true
+        }
+    }
+}
+
+
 struct ChapterListView_Previews: PreviewProvider {
     static var previews: some View {
         ChapterListView()
@@ -246,3 +256,4 @@ struct ChapterListView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+        

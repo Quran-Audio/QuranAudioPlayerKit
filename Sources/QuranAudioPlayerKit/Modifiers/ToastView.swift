@@ -27,10 +27,11 @@ struct ToastView: ViewModifier {
                         Text(title)
                             .font(.system(size: 20))
                     }
+                    .foregroundColor(ThemeService.themeColor)
                     if(!description.isEmpty) {
                         Text(description)
                             .font(.system(size: 18))
-                            .foregroundColor(ThemeService.whiteColor.opacity(0.7))
+                            .foregroundColor(ThemeService.lableColor.opacity(0.7))
                     }
                     if type == .alert {
                         HStack{
@@ -38,6 +39,7 @@ struct ToastView: ViewModifier {
                                 onConfirm?()
                             } label: {
                                 Text("Ok")
+                                    .foregroundColor(ThemeService.lableColor.opacity(0.9))
                                     .padding(.horizontal)
                                     .frame(height: 40)
                                     .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder())
@@ -47,6 +49,7 @@ struct ToastView: ViewModifier {
                                 showToast = false
                             } label: {
                                 Text("Cancel")
+                                    .foregroundColor(ThemeService.lableColor.opacity(0.9))
                                     .padding(.horizontal)
                                     .frame(height: 40)
                                     .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder())
@@ -56,11 +59,11 @@ struct ToastView: ViewModifier {
                     }
                 }
                 .padding()
-                .foregroundColor(ThemeService.whiteColor)
-                .background(ThemeService.themeColor)
+                .foregroundColor(ThemeService.lableColor)
+                .background(ThemeService.whiteColor)
                 .cornerRadius(15)
-                .shadow(color: ThemeService.themeColor.opacity(0.7),
-                        radius: 3, x: 1, y: 1)
+                .shadow(color: ThemeService.lableColor.opacity(0.4),
+                        radius: 2, x: 1, y: 1)
                 
             }
         }.onChange(of: showToast) { newValue in

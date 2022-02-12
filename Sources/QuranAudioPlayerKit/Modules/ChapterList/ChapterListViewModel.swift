@@ -29,7 +29,22 @@ class ChapterListViewModel: ObservableObject {
     var baseUrl:String {DataService.shared.baseUrl}
     var chapterList:[ChapterModel] {DataService.shared.chapterList}
     
+    func favouriteImage(chapter:ChapterModel) -> String {
+        if isFavourite(chapter: chapter) {
+            return "star"
+        }
+        return "star.slash"
+    }
     
+    func downloadImage(chapter:ChapterModel) -> String {
+        if DataService.shared.isInDownloadQueue(index: chapter.index) {
+            return "arrow.clockwise.icloud"
+        } else if isDownloaded(chapter: chapter) {
+            return "checkmark.icloud"
+        }else {
+            return "icloud.and.arrow.down"
+        }
+    }
     
     var chapters:[ChapterModel] {
         switch listType {
@@ -48,12 +63,9 @@ class ChapterListViewModel: ObservableObject {
         }
     }
         
-
-    
-//    private var data:DataModel?
     init() {
         print("initiated")
-        //self.data = DataService.shared.chapterList
+        self.currentChapter = AudioService.shared.loadChapter()
     }
 }
 
@@ -63,6 +75,10 @@ extension ChapterListViewModel {
         self.currentChapter = chapter
         configureAudio()
         playPause()
+        if DataService.shared.isDownloadWhilePlay(),
+           !DataService.shared.isDownloaded(index: chapter.index) {
+            DataService.shared.addToDownloadQueue(index: chapter.index)
+        }
     }
     
     //MARK: play and seek
@@ -101,8 +117,17 @@ extension ChapterListViewModel {
 //MARK: Download
 extension ChapterListViewModel {
     func addToDownloadQueue(chapter:ChapterModel) {
-        DownloadService.shared.addToDownloadQueue(chapter: chapter)
+        if DataService.shared.isInDownloadQueue(index: chapter.index) {
+            DownloadService.shared.removeFromDownloadQueue(chapter: chapter)
+            DataService.shared.removeFromDownloadQueue(index: chapter.index)
+        }else {
+            DataService.shared.addToDownloadQueue(index:chapter.index)
+            if DownloadService.shared.isDownloadingInProgress == false {
+                DownloadService.shared.processDownloadQueue()
+            }
+        }
     }
+    
     
     func deleteChapter(chapter:ChapterModel) {
         if DataService.shared.isDownloaded(index: chapter.index) {
@@ -112,6 +137,23 @@ extension ChapterListViewModel {
     
     func isDownloaded(chapter:ChapterModel) -> Bool {
         DataService.shared.isDownloaded(index: chapter.index)
+    }
+    
+    func isInDownloadQueue(chapter:ChapterModel) -> Bool {
+        DataService.shared.isInDownloadQueue(index: chapter.index)
+    }
+    
+    func isDownloadQueueEmpty() -> Bool {
+        DataService.shared.getDownloadQueue().isEmpty
+    }
+    
+    func setDownloadWithCellularAndWifi() {
+        DataService.shared.set(downloadWith: .cellularAndWifi)
+        DownloadService.shared.processDownloadQueue()
+    }
+    
+    func isDownloadWithWifiOnly() -> Bool {
+        DataService.shared.getDownloadWith() == .wifi
     }
 }
 

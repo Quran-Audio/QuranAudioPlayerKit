@@ -13,7 +13,6 @@ struct PlayerCellView: View {
     var body: some View {
         VStack(spacing:0) {
             ZStack(alignment:.leading) {
-                // Audio Progress Bar
                 GeometryReader { geometry in
                     Rectangle().frame(height: 5)
                         .foregroundColor(Color(uiColor: .tertiarySystemBackground))
@@ -31,10 +30,10 @@ struct PlayerCellView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading, spacing: 0) {
-                            Text("سورَة \(viewModel.currentChapter?.name ?? "")")
+                            Text("\(viewModel.currentChapter?.name ?? "")")
                                 .foregroundColor(Color(uiColor: .label))
                                 .font(ThemeService.shared.arabicFont(size: 17))
-                            Text("Surah \(viewModel.currentChapter?.nameTrans ?? "")")
+                            Text("\(viewModel.currentChapter?.nameTrans ?? "")")
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                                 .font(ThemeService.shared.translationFont(size: 15))
                         }
@@ -46,7 +45,7 @@ struct PlayerCellView: View {
                         LoaderView()
                     }
                     Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                        .foregroundColor(Color(uiColor: .label))
+                        .foregroundColor(ThemeService.themeColor)
                         .font(.system(size: 25))
                         .frame(width: 50, height: 50)
                         .onTapGesture {

@@ -138,3 +138,55 @@ extension DataService {
     }
 }
 
+//MARK: Download Queue
+extension DataService {
+    //MARK: Downnloaded
+    public func getDownloadQueue() -> [Int] {
+        guard let downloadQueue = UserDefaults.standard.object(forKey: "QMDownloadQueue") as? [Int] else {
+            return []
+        }
+        return downloadQueue
+    }
+    
+    public func getChaptersInDownloadQueue() -> [ChapterModel] {
+        let downloadQueue = getDownloadQueue()
+        return chapterList.filter({ chapter in
+            downloadQueue.contains(chapter.index)
+        })
+    }
+    
+    public func addToDownloadQueue(index:Int) {
+        var downloadQueue = getDownloadQueue()
+        if !downloadQueue.contains(index) {
+            downloadQueue.append(index)
+            UserDefaults.standard.set(downloadQueue, forKey: "QMDownloadQueue")
+        }
+    }
+    
+    public func isInDownloadQueue(index:Int) -> Bool {
+        let downloadQueue = getDownloadQueue()
+        return downloadQueue.contains(index) ? true : false
+    }
+    
+    public func removeFromDownloadQueue(index:Int) {
+        var downloadQueue = getDownloadQueue()
+        if let index = downloadQueue.firstIndex(of: index) {
+            downloadQueue.remove(at: index)
+        }
+        UserDefaults.standard.set(downloadQueue, forKey: "QMDownloadQueue")
+    }
+}
+
+//MARK: Add to download queue while playing
+extension DataService {
+    public func setDownloadWhilePlaying() {
+        let isDownloadWhilePlay = isDownloadWhilePlay()
+        UserDefaults.standard.set(!isDownloadWhilePlay,
+                                  forKey: "QMDownloadWhilePlaying")
+    }
+    
+    public func isDownloadWhilePlay() -> Bool {
+        UserDefaults.standard.bool(forKey: "QMDownloadWhilePlaying")
+    }
+}
+

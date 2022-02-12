@@ -8,22 +8,10 @@ import SwiftUI
 
 struct FullPlayerView: View {
     @ObservedObject private var viewModel = FullPlayerViewModel()
-    @Binding var showFullPlayer: Bool
+//    @Binding var showFullPlayer: Bool
     
     var body: some View {
         VStack (alignment: .center, spacing: 20) {
-            HStack {
-                Spacer()
-                Button {
-                    showFullPlayer.toggle()
-                } label: {
-                    Image(systemName: "xmark")
-                        .padding()
-                        .background(Color(uiColor: .tertiaryLabel).opacity(0.7))
-                        .foregroundColor(Color(uiColor: .label))
-                        .clipShape(Circle())
-                }
-            }.padding()
             GeometryReader { geo in
                 Image(systemName: "sparkles")
                     .resizable()
@@ -54,10 +42,10 @@ struct TitleView: View {
     var body: some View {
        
         VStack(alignment:.center, spacing: 10) {
-            Text("سورَة \(viewModel.chapterName)")
+            Text(viewModel.chapterName)
                 .font(.system(.title))
                 .foregroundColor(Color(uiColor: .label))
-            Text("Surah \(viewModel.chapterNameTrans)")
+            Text(viewModel.chapterNameTrans)
                 .font(.system(.title3))
                 .foregroundColor(Color(uiColor: .secondaryLabel))
         }
@@ -83,9 +71,7 @@ struct ButtonView: View {
                     .font(.system(size: 25))
                     .frame(width: 50, height: 50)
                     .onTapGesture {
-                        //TODO: Not working properly - Need to fix
-                        viewModel.seekTo(
-                            seconds: CGFloat(viewModel.currentChapter?.durationInSecs ?? 0 - 10))
+                        viewModel.goBackTenSecs()
                     }
                 Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     .foregroundColor(ThemeService.themeColor)
@@ -99,9 +85,7 @@ struct ButtonView: View {
                     .font(.system(size: 25))
                     .frame(width: 50, height: 50)
                     .onTapGesture {
-                        //TODO: Not working properly - Need to fix
-                        viewModel.seekTo(
-                            seconds: CGFloat(viewModel.currentChapter?.durationInSecs ?? 0 + 10))
+                        viewModel.goForwardTenSecs()
                     }
                 Image(systemName: "forward")
                     .foregroundColor(Color(uiColor: .secondaryLabel))
@@ -154,9 +138,9 @@ struct FullPlayerView_Previews: PreviewProvider {
     @State private static var showFullPlayer = true
     static var previews: some View {
         Group {
-            FullPlayerView(showFullPlayer: $showFullPlayer)
+            FullPlayerView()
                 .previewDevice("iPhone 13 mini")
-            FullPlayerView(showFullPlayer: $showFullPlayer)
+            FullPlayerView()
                 .preferredColorScheme(.dark)
                 .previewDevice("iPhone 13 mini")
         }
