@@ -30,10 +30,10 @@ struct PlayerCellView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading, spacing: 0) {
-                            Text("سورَة \(viewModel.currentChapter?.name ?? "")")
+                            Text("\(viewModel.currentChapter?.name ?? "")")
                                 .foregroundColor(Color(uiColor: .label))
                                 .font(ThemeService.shared.arabicFont(size: 17))
-                            Text("Surah \(viewModel.currentChapter?.nameTrans ?? "")")
+                            Text("\(viewModel.currentChapter?.nameTrans ?? "")")
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                                 .font(ThemeService.shared.translationFont(size: 15))
                         }

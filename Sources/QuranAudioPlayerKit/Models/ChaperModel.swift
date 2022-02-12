@@ -20,7 +20,8 @@ public struct Mail:Codable {
     public let to: [String]
 }
 
-public struct ChapterModel:Codable,Equatable {
+public struct ChapterModel:Codable,Equatable,Identifiable {
+    public var id: Int {index}
     public let index: Int
     public let name: String
     public let nameTrans: String

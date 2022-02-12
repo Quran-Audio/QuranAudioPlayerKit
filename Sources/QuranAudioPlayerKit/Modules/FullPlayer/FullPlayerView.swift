@@ -41,10 +41,10 @@ struct TitleView: View {
     var body: some View {
        
         VStack(alignment:.center, spacing: 10) {
-            Text("سورَة \(viewModel.chapterName)")
+            Text(viewModel.chapterName)
                 .font(.system(.title))
                 .foregroundColor(Color(uiColor: .label))
-            Text("Surah \(viewModel.chapterNameTrans)")
+            Text(viewModel.chapterNameTrans)
                 .font(.system(.title3))
                 .foregroundColor(Color(uiColor: .secondaryLabel))
         }

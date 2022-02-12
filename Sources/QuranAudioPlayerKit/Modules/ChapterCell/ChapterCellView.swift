@@ -32,24 +32,30 @@ public struct ChapterCell:View {
                                 .font(.system(size: 17))
                         }
                         VStack(alignment:.leading, spacing: 5) {
-                            Text("سورَة \(viewModel.chapter.name)")
+                            Text(viewModel.chapter.name)
                                 .font(ThemeService.shared.arabicFont(size: 17))
                                 .foregroundColor(Color(UIColor.label))
-                            Text("Surah \(viewModel.chapter.nameTrans)")
+                            Text(viewModel.chapter.nameTrans)
                                 .font(.system(size: 15))
                                 .foregroundColor(Color(UIColor.secondaryLabel))
                         }
                         Spacer()
-                        Button {
-                            viewModel.onAddOrRemoveFromDownloadQueue()
-                        } label: {
-                            Image(systemName: viewModel.imageName)
+                        if viewModel.isCurrentChapter {
+                            Image(systemName: "waveform")
                                 .font(.system(size: 20))
                                 .frame(width: 60, height: 70)
                                 .foregroundColor(ThemeService.themeColor)
                         }
-
-                        
+                        if !viewModel.isDownloaded {
+                            Button {
+                                viewModel.onAddOrRemoveFromDownloadQueue()
+                            } label: {
+                                Image(systemName: viewModel.imageName)
+                                    .font(.system(size: 20))
+                                    .frame(width: 60, height: 70)
+                                    .foregroundColor(ThemeService.themeColor)
+                            }
+                        }
                     }
                 }
                 .background(Color(UIColor.systemBackground))

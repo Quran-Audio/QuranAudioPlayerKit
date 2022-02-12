@@ -67,10 +67,10 @@ struct DownloadQueueView: View {
                     .strokeBorder(ThemeService.borderColor,lineWidth: 2)
                 HStack {
                     VStack(alignment:.leading) {
-                        Text("سورَة \(chapter.name) .\(chapter.index)")
+                        Text("\(chapter.index). \(chapter.name) ")
                             .foregroundColor(ThemeService.themeColor)
                             .font(ThemeService.shared.arabicFont(size: 20))
-                        Text("Surah \(chapter.nameTrans)")
+                        Text(chapter.nameTrans)
                             .foregroundColor(ThemeService.themeColor.opacity(0.7))
                             .font(ThemeService.shared.translationFont(size: 18))
                             .offset(x:20,y:-5)
@@ -155,10 +155,10 @@ struct DownloadQueueView: View {
     
     @ViewBuilder var title: some View {
         VStack{
-            Text("سورَة \(viewModel.chapterName)")
+            Text(viewModel.chapterName)
                 .font(ThemeService.shared.arabicFont(size: 20))
                 .foregroundColor(ThemeService.themeColor)
-            Text("Surah \(viewModel.chapterTrans)")
+            Text(viewModel.chapterTrans)
                 .font(ThemeService.shared.translationFont(size: 20))
                 .foregroundColor(ThemeService.themeColor.opacity(0.7))
         }
