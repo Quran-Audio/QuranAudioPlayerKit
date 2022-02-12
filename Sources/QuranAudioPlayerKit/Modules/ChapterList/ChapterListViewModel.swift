@@ -114,11 +114,13 @@ extension ChapterListViewModel {
 extension ChapterListViewModel {
     func addToDownloadQueue(chapter:ChapterModel) {
         if DataService.shared.isInDownloadQueue(index: chapter.index) {
+            DownloadService.shared.removeFromDownloadQueue(chapter: chapter)
             DataService.shared.removeFromDownloadQueue(index: chapter.index)
         }else {
             DataService.shared.addToDownloadQueue(index:chapter.index)
         }
     }
+    
     
     func deleteChapter(chapter:ChapterModel) {
         if DataService.shared.isDownloaded(index: chapter.index) {
@@ -128,6 +130,23 @@ extension ChapterListViewModel {
     
     func isDownloaded(chapter:ChapterModel) -> Bool {
         DataService.shared.isDownloaded(index: chapter.index)
+    }
+    
+    func isInDownloadQueue(chapter:ChapterModel) -> Bool {
+        DataService.shared.isInDownloadQueue(index: chapter.index)
+    }
+    
+    func isDownloadQueueEmpty() -> Bool {
+        DataService.shared.getDownloadQueue().isEmpty
+    }
+    
+    func setDownloadWithCellularAndWifi() {
+        DataService.shared.set(downloadWith: .cellularAndWifi)
+        DownloadService.shared.processDownloadQueue()
+    }
+    
+    func isDownloadWithWifiOnly() -> Bool {
+        DataService.shared.getDownloadWith() == .wifi
     }
 }
 

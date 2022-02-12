@@ -13,6 +13,10 @@ class SettingsViewModel:ObservableObject {
     
     @Published var downloadWith:DataService.DownloadWith = .wifi
     
+    init() {
+        downloadWith = DataService.shared.getDownloadWith()
+    }
+    
     func setDownloadWithWifi() {
         DataService.shared.set(downloadWith: .wifi)
         loadSettings()

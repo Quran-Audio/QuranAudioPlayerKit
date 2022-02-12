@@ -19,18 +19,6 @@ public class DownloadService: NSObject,URLSessionDownloadDelegate {
     private var session:URLSession?
     public var isDownloadingInProgress:Bool = false
     
-    public func startDownload() {
-        if task?.state != .running {
-            guard let url = URL(string: "https://archive.org/download/malayalam-meal/000_Al_Fattiha.mp3") else {return}
-            let session = URLSession(configuration: .default,
-                                     delegate: self,
-                                     delegateQueue: .main)
-            task = session.downloadTask(with: url)
-            task?.resume()
-        }
-    }
-    
-    
     //FIXME: To Be deleted
     private func startFileDownload(chapter:ChapterModel) {
         guard let url = URL(string: "\(baseUrl)\(chapter.fileName)") else {
@@ -168,6 +156,10 @@ extension DownloadService {
     
     public func removeFromDownloadQueue(chapter:ChapterModel?) {
         guard let chapter = chapter else {return}
+        if let currentChapter = downloadList.first,
+           currentChapter == chapter {
+            cancelCurrentDownload()
+        }
         DataService.shared.removeFromDownloadQueue(index: chapter.index)
     }
     
@@ -187,11 +179,14 @@ extension DownloadService {
     }
     
     public func cancelCurrentDownload() {
-        isDownloadingInProgress = false
-        removeFromDownloadQueue(chapter: downloadList.first)
-        session?.invalidateAndCancel()
-        task?.cancel()
-        publishDownloadStopped()
-        processDownloadQueue()
+        if let currentChapter = downloadList.first {
+            isDownloadingInProgress = false
+            DataService.shared.removeFromDownloadQueue(index: currentChapter.index)
+            session?.invalidateAndCancel()
+            task?.cancel()
+            publishDownloadStopped()
+            processDownloadQueue()
+        }
+        
     }
 }

@@ -100,38 +100,13 @@ struct ChapterListView: View {
                                       allowsFullSwipe: true,
                                       content: {
                             Button {
-                                if viewModel.isFavourite(chapter: chapter) {
-                                    toastType = .info
-                                    toastTitle = "Removed from favourites"
-                                    toastDescriptiom = ""
-                                }else {
-                                    toastType = .info
-                                    toastTitle = "Added to favourites"
-                                    toastDescriptiom = ""
-                                }
-                                self.showToast = true
-                                viewModel.onFavouriteChapter(chapterIndex: chapter.index)
+                                onFavourite(chapter: chapter)
                             } label: {
-                                Label("Favourite",
-                                      systemImage: viewModel.favouriteImage(chapter: chapter))
+                                Image(systemName: viewModel.favouriteImage(chapter: chapter))
                             }.tint(ThemeService.yellow)
+                            
                             Button {
-                                if viewModel.isDownloaded(chapter: chapter) {
-                                    toastType = .alert
-                                    toastTitle = "Warning"
-                                    toastDescriptiom = "Permanently delete the file?"
-                                    self.showToast = true
-                                    onToastConfirm = {
-                                        viewModel.deleteChapter(chapter: chapter)
-                                        self.showToast = false
-                                    }
-                                }else {
-                                    toastType = .info
-                                    toastTitle = "Added to download queue."
-                                    viewModel.addToDownloadQueue(chapter: chapter)
-                                    toastDescriptiom = ""
-                                    self.showToast = true
-                                }
+                                onDownload(chapter: chapter)
                             } label: {
                                 Image(systemName:viewModel.downloadImage(chapter: chapter))
                             }.tint(ThemeService.green)
@@ -207,6 +182,58 @@ struct ChapterListView: View {
     
 }
 
+//MARK: Toast Action
+extension ChapterListView {
+    func onFavourite(chapter:ChapterModel) {
+        if viewModel.isFavourite(chapter: chapter) {
+            toastType = .info
+            toastTitle = "Removed from favourites"
+            toastDescriptiom = ""
+        }else {
+            toastType = .info
+            toastTitle = "Added to favourites"
+            toastDescriptiom = ""
+        }
+        self.showToast = true
+        viewModel.onFavouriteChapter(chapterIndex: chapter.index)
+    }
+    
+    func onDownload(chapter:ChapterModel) {
+        if viewModel.isDownloaded(chapter: chapter) {
+            toastType = .alert
+            toastTitle = "Warning"
+            toastDescriptiom = "Permanently delete the file?"
+            self.showToast = true
+            onToastConfirm = {
+                viewModel.deleteChapter(chapter: chapter)
+                self.showToast = false
+            }
+        }else {
+            if viewModel.isDownloadQueueEmpty(),
+               viewModel.isDownloadWithWifiOnly() {
+                toastType = .alert
+                toastTitle = "Warning"
+                toastDescriptiom = "Start Download using Cellular?"
+                onToastConfirm = {
+                    viewModel.setDownloadWithCellularAndWifi()
+                    self.showToast = false
+                }
+            }else if viewModel.isInDownloadQueue(chapter: chapter){
+                toastType = .info
+                toastTitle = "Removed from download queue."
+                toastDescriptiom = ""
+            }else {
+                toastType = .info
+                toastTitle = "Added to download queue."
+                toastDescriptiom = ""
+            }
+            
+            viewModel.addToDownloadQueue(chapter: chapter)
+            self.showToast = true
+        }
+    }
+}
+
 struct ChapterListView_Previews: PreviewProvider {
     static var previews: some View {
         ChapterListView()
@@ -214,38 +241,4 @@ struct ChapterListView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
-
-
-//onFavourite: { chapter in
-//if viewModel.isFavourite(chapter: chapter) {
-//    toastType = .info
-//    toastTitle = "Removed from favourites"
-//    toastDescriptiom = ""
-//}else {
-//    toastType = .info
-//    toastTitle = "Added to favourites"
-//    toastDescriptiom = ""
-//}
-//self.showToast = true
-//viewModel.onFavouriteChapter(chapterIndex: chapter.index)
-//},
-//        onDownload: { chapter in
-//if viewModel.isDownloaded(chapter: chapter) {
-//    toastType = .alert
-//    toastTitle = "Warning"
-//    toastDescriptiom = "Permanently delete the file?"
-//    self.showToast = true
-//    onToastConfirm = {
-//        viewModel.deleteChapter(chapter: chapter)
-//        self.showToast = false
-//    }
-//}else {
-//    toastType = .info
-//    toastTitle = "Added to download queue."
-//    viewModel.addToDownloadQueue(chapter: chapter)
-//    toastDescriptiom = ""
-//    self.showToast = true
-//}
-//},
-        
         

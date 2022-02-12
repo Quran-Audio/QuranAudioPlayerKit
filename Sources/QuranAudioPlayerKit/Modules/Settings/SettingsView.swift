@@ -50,9 +50,6 @@ extension SettingsView {
     }
     @ViewBuilder var emailView:some View {
         VStack(alignment:.leading) {
-//            Text("Email:")
-//                .font(.system(size: 20)).bold()
-//                .padding(.vertical, 20)
             Button(action: {
                 if MFMailComposeViewController.canSendMail() {
                     self.isShowingMailView.toggle()
@@ -77,7 +74,6 @@ extension SettingsView {
                             MailView(result: self.$result)
                         }
                 .padding(10)
-                //.overlay(RoundedRectangle(cornerRadius: 4).strokeBorder())
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 40)
