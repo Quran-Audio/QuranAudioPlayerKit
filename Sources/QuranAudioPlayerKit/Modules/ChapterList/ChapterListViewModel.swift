@@ -118,6 +118,9 @@ extension ChapterListViewModel {
             DataService.shared.removeFromDownloadQueue(index: chapter.index)
         }else {
             DataService.shared.addToDownloadQueue(index:chapter.index)
+            if DownloadService.shared.isDownloadingInProgress == false {
+                DownloadService.shared.processDownloadQueue()
+            }
         }
     }
     

@@ -97,7 +97,7 @@ struct ChapterListView: View {
                     ChapterCell(chapter: chapter)
                         .contentShape(Rectangle())
                         .swipeActions(edge: .trailing,
-                                      allowsFullSwipe: true,
+                                      allowsFullSwipe: false,
                                       content: {
                             Button {
                                 onFavourite(chapter: chapter)

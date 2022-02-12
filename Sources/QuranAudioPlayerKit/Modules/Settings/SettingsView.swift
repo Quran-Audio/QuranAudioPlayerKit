@@ -20,6 +20,7 @@ struct SettingsView: View {
                     downloadWithView
                 }
                 emailView
+                addToDownloadQueueView
                 shareView
                 Spacer()
             }
@@ -31,6 +32,18 @@ struct SettingsView: View {
 
 //MARK: Download With
 extension SettingsView {
+    @ViewBuilder var addToDownloadQueueView:some View {
+        VStack(alignment:.leading) {
+            HStack{
+                Image(systemName:viewModel.downloadWith == .wifi ? "checkmark.square":"square")
+                Text("Add to download queue while playing")
+                Spacer()
+            }.padding(.horizontal,10)
+        }
+        .padding(.horizontal, 10)
+        .font(.system(size: 20))
+    }
+        
     @ViewBuilder var shareView:some View {
         VStack(alignment:.leading) {
             Button(action: {
