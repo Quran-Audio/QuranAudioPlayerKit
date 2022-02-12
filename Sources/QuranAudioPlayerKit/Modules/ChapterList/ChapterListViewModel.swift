@@ -29,7 +29,22 @@ class ChapterListViewModel: ObservableObject {
     var baseUrl:String {DataService.shared.baseUrl}
     var chapterList:[ChapterModel] {DataService.shared.chapterList}
     
+    func favouriteImage(chapter:ChapterModel) -> String {
+        if isFavourite(chapter: chapter) {
+            return "star"
+        }
+        return "star.slash"
+    }
     
+    func downloadImage(chapter:ChapterModel) -> String {
+        if DataService.shared.isInDownloadQueue(index: chapter.index) {
+            return "arrow.clockwise.icloud"
+        } else if isDownloaded(chapter: chapter) {
+            return "checkmark.icloud"
+        }else {
+            return "icloud.and.arrow.down"
+        }
+    }
     
     var chapters:[ChapterModel] {
         switch listType {
@@ -98,7 +113,11 @@ extension ChapterListViewModel {
 //MARK: Download
 extension ChapterListViewModel {
     func addToDownloadQueue(chapter:ChapterModel) {
-        DownloadService.shared.addToDownloadQueue(chapter: chapter)
+        if DataService.shared.isInDownloadQueue(index: chapter.index) {
+            DataService.shared.removeFromDownloadQueue(index: chapter.index)
+        }else {
+            DataService.shared.addToDownloadQueue(index:chapter.index)
+        }
     }
     
     func deleteChapter(chapter:ChapterModel) {

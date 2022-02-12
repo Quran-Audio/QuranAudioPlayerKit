@@ -14,6 +14,7 @@ class ChapterCellViewModel:ObservableObject {
         self.chapter = chapter
     }
     var chapter:ChapterModel
+    
     var isDownloaded:Bool {
         DataService
         .shared
@@ -27,35 +28,5 @@ class ChapterCellViewModel:ObservableObject {
         return false
     }
     
-    var imageName:String {
-        var image = ""
-        if isCurrentChapter {
-            image = "waveform"
-        }
-        
-        if !isDownloaded {
-            image = "icloud.and.arrow.down"
-        }
-        
-        if DataService.shared.isInDownloadQueue(index: chapter.index) {
-            image = "arrow.clockwise.icloud"
-        }
-        
-        return image
-    }
-    
-    
-}
-
-//MARK: Download Queue
-extension ChapterCellViewModel {
-    func onAddOrRemoveFromDownloadQueue() {
-        if DataService.shared.isInDownloadQueue(index: chapter.index) {
-            DataService.shared.removeFromDownloadQueue(index: chapter.index)
-        }else {
-            DataService.shared.addToDownloadQueue(index:chapter.index)
-        }
-        
-        statusImage = imageName
-    }
+    var imageName:String {isCurrentChapter ? "waveform" : ""}
 }

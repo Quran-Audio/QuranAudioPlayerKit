@@ -26,14 +26,12 @@ struct ChapterListView: View {
             VStack {
                 ZStack(alignment:.bottom) {
                     VStack(spacing:0)  {
-                        ScrollView {
-                            if viewModel.chapters.count == 0 {
-                                Spacer(minLength: 20)
-                                emptyListView
-                                Spacer()
-                            }else {
-                                chapterListView
-                            }
+                        if viewModel.chapters.count == 0 {
+                            Spacer(minLength: 20)
+                            emptyListView
+                            Spacer()
+                        }else {
+                            chapterListView
                         }
                         if AudioService.shared.isCurrentChapterAvailable() {
                             PlayerCellView(viewModel: playerCellViewModel)
@@ -94,17 +92,65 @@ struct ChapterListView: View {
     
     @ViewBuilder private var chapterListView: some View {
         VStack(spacing:1) {
-            Spacer(minLength: 5)
-            ForEach(viewModel.chapters, id: \.index) { chapter in
-                ChapterCell(chapter: chapter)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        self.viewModel.setCurrent(chapter: chapter)
-                    }
+            List {
+                ForEach(viewModel.chapters, id: \.index) { chapter in
+                    ChapterCell(chapter: chapter)
+                        .contentShape(Rectangle())
+                        .swipeActions(edge: .trailing,
+                                      allowsFullSwipe: true,
+                                      content: {
+                            Button {
+                                if viewModel.isFavourite(chapter: chapter) {
+                                    toastType = .info
+                                    toastTitle = "Removed from favourites"
+                                    toastDescriptiom = ""
+                                }else {
+                                    toastType = .info
+                                    toastTitle = "Added to favourites"
+                                    toastDescriptiom = ""
+                                }
+                                self.showToast = true
+                                viewModel.onFavouriteChapter(chapterIndex: chapter.index)
+                            } label: {
+                                Label("Favourite",
+                                      systemImage: viewModel.favouriteImage(chapter: chapter))
+                            }.tint(ThemeService.yellow)
+                            Button {
+                                if viewModel.isDownloaded(chapter: chapter) {
+                                    toastType = .alert
+                                    toastTitle = "Warning"
+                                    toastDescriptiom = "Permanently delete the file?"
+                                    self.showToast = true
+                                    onToastConfirm = {
+                                        viewModel.deleteChapter(chapter: chapter)
+                                        self.showToast = false
+                                    }
+                                }else {
+                                    toastType = .info
+                                    toastTitle = "Added to download queue."
+                                    viewModel.addToDownloadQueue(chapter: chapter)
+                                    toastDescriptiom = ""
+                                    self.showToast = true
+                                }
+                            } label: {
+                                Image(systemName:viewModel.downloadImage(chapter: chapter))
+                            }.tint(ThemeService.green)
+                        })
+                        .onTapGesture {
+                            self.viewModel.setCurrent(chapter: chapter)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(.init(top: 0,
+                                             leading: 0,
+                                             bottom: 1,
+                                             trailing: 0))
+                }
             }
-            Spacer(minLength: 5)
+            .background(.clear)
+            .listStyle(.grouped)
         }
     }
+    
     
     
     struct TabBarView: View {
@@ -201,5 +247,5 @@ struct ChapterListView_Previews: PreviewProvider {
 //    self.showToast = true
 //}
 //},
-//        
-//        
+        
+        

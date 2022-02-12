@@ -10,6 +10,8 @@ import SwiftUI
 public class ThemeService {
     public static let secondaryColor = Color("secondaryColor")
     public static let indigo = Color("indigo")
+    public static let green = Color("green")
+    public static let yellow = Color("yellow")
     public static let red = Color("red")
     public static let whiteColor = Color(UIColor.systemBackground)
     public static var themeColor = Color("theme")

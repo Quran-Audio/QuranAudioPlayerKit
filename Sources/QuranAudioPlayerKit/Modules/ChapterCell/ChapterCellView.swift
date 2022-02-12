@@ -10,7 +10,7 @@ import SwiftUI
 public struct ChapterCell:View {
     @ObservedObject var viewModel:ChapterCellViewModel
     
-    init(chapter:ChapterModel) {
+    public init(chapter:ChapterModel) {
         viewModel = ChapterCellViewModel(chapter: chapter)
     }
     
@@ -45,16 +45,6 @@ public struct ChapterCell:View {
                                 .font(.system(size: 20))
                                 .frame(width: 60, height: 70)
                                 .foregroundColor(ThemeService.themeColor)
-                        }
-                        if !viewModel.isDownloaded {
-                            Button {
-                                viewModel.onAddOrRemoveFromDownloadQueue()
-                            } label: {
-                                Image(systemName: viewModel.imageName)
-                                    .font(.system(size: 20))
-                                    .frame(width: 60, height: 70)
-                                    .foregroundColor(ThemeService.themeColor)
-                            }
                         }
                     }
                 }
