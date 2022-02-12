@@ -57,6 +57,16 @@ class FullPlayerViewModel:ObservableObject {
         guard let currentChapter = AudioService.shared.loadChapter() else {return}
         self.currentChapter = currentChapter
     }
+    
+    func goBackTenSecs() {
+        let currentSecs = AudioService.shared.currentTimeInSecs
+        seekTo(seconds: currentSecs - 10)
+    }
+    
+    func goForwardTenSecs() {
+        let currentSecs = AudioService.shared.currentTimeInSecs
+        seekTo(seconds: currentSecs + 10)
+    }
 }
 
 //MARK: Notification Handling

@@ -70,9 +70,7 @@ struct ButtonView: View {
                     .font(.system(size: 25))
                     .frame(width: 50, height: 50)
                     .onTapGesture {
-                        //TODO: Not working properly - Need to fix
-                        viewModel.seekTo(
-                            seconds: CGFloat(viewModel.currentChapter?.durationInSecs ?? 0 - 10))
+                        viewModel.goBackTenSecs()
                     }
                 Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     .foregroundColor(ThemeService.themeColor)
@@ -86,9 +84,7 @@ struct ButtonView: View {
                     .font(.system(size: 25))
                     .frame(width: 50, height: 50)
                     .onTapGesture {
-                        //TODO: Not working properly - Need to fix
-                        viewModel.seekTo(
-                            seconds: CGFloat(viewModel.currentChapter?.durationInSecs ?? 0 + 10))
+                        viewModel.goForwardTenSecs()
                     }
                 Image(systemName: "forward")
                     .foregroundColor(Color(uiColor: .secondaryLabel))
