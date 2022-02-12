@@ -12,9 +12,11 @@ class SettingsViewModel:ObservableObject {
     }
     
     @Published var downloadWith:DataService.DownloadWith = .wifi
+    @Published var downloadWithPlay:Bool = false
     
     init() {
         downloadWith = DataService.shared.getDownloadWith()
+        downloadWithPlay = DataService.shared.isDownloadWhilePlay()
     }
     
     func setDownloadWithWifi() {
@@ -29,5 +31,14 @@ class SettingsViewModel:ObservableObject {
     
     private func loadSettings() {
         downloadWith = DataService.shared.getDownloadWith()
+    }
+    
+    func isDownloadWhilePlay() -> Bool {
+        DataService.shared.isDownloadWhilePlay()
+    }
+    
+    func setDownloadWhilePlay() {
+        DataService.shared.setDownloadWhilePlaying()
+        downloadWithPlay = DataService.shared.isDownloadWhilePlay()
     }
 }

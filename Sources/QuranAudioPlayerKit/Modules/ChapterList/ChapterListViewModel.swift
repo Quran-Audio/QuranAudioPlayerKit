@@ -75,6 +75,10 @@ extension ChapterListViewModel {
         self.currentChapter = chapter
         configureAudio()
         playPause()
+        if DataService.shared.isDownloadWhilePlay(),
+           !DataService.shared.isDownloaded(index: chapter.index) {
+            DataService.shared.addToDownloadQueue(index: chapter.index)
+        }
     }
     
     //MARK: play and seek

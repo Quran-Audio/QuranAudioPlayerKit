@@ -35,10 +35,15 @@ extension SettingsView {
     @ViewBuilder var addToDownloadQueueView:some View {
         VStack(alignment:.leading) {
             HStack{
-                Image(systemName:viewModel.downloadWith == .wifi ? "checkmark.square":"square")
+                Image(systemName:viewModel.downloadWithPlay ? "checkmark.square":"square")
                 Text("Add to download queue while playing")
                 Spacer()
-            }.padding(.horizontal,10)
+            }
+            .contentShape(Rectangle())
+            .padding(.horizontal,10)
+            .onTapGesture {
+                viewModel.setDownloadWhilePlay()
+            }
         }
         .padding(.horizontal, 10)
         .font(.system(size: 20))

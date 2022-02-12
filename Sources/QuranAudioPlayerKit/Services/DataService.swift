@@ -177,3 +177,16 @@ extension DataService {
     }
 }
 
+//MARK: Add to download queue while playing
+extension DataService {
+    public func setDownloadWhilePlaying() {
+        let isDownloadWhilePlay = isDownloadWhilePlay()
+        UserDefaults.standard.set(!isDownloadWhilePlay,
+                                  forKey: "QMDownloadWhilePlaying")
+    }
+    
+    public func isDownloadWhilePlay() -> Bool {
+        UserDefaults.standard.bool(forKey: "QMDownloadWhilePlaying")
+    }
+}
+
