@@ -20,6 +20,7 @@ struct ChapterListView: View {
     @State var toastType:ToastView.ToasType = .info
     @State var onToastConfirm:(() -> Void)?
     @State var showFullPlayer: Bool = false
+    @State var navigateChapterSelection: Int? = nil
     
     var body: some View {
         NavigationView {
@@ -33,11 +34,14 @@ struct ChapterListView: View {
                         }else {
                             chapterListView
                         }
+                        
                         if AudioService.shared.isCurrentChapterAvailable() {
-                            PlayerCellView(viewModel: playerCellViewModel)
-                                .onTapGesture {
-                                    showFullPlayer.toggle()
-                                }
+                            if TargetDevice.currentDevice != .nativeMac {
+                                PlayerCellView(viewModel: playerCellViewModel)
+                                    .onTapGesture {
+                                        showFullPlayer.toggle()
+                                    }
+                            }
                         }
                         TabBarView(viewModel: viewModel)
                     }
@@ -67,6 +71,7 @@ struct ChapterListView: View {
             }
             
         }
+        .deviceNavigationViewStyle()
         .toast(showToast: $showToast,
                title: toastTitle,
                description: toastDescriptiom,
@@ -91,7 +96,13 @@ struct ChapterListView: View {
     }
     
     @ViewBuilder private var chapterListView: some View {
+        let navigation = NavigationLink(destination: FullPlayerView(),
+                                        tag: 10,
+                                        selection: $navigateChapterSelection) { Color.clear }
         VStack(spacing:1) {
+            if TargetDevice.currentDevice == .nativeMac {
+                navigation.frame(height: 0)
+            }
             List {
                 ForEach(viewModel.chapters, id: \.index) { chapter in
                     ChapterCell(chapter: chapter)
@@ -113,6 +124,9 @@ struct ChapterListView: View {
                         })
                         .onTapGesture {
                             self.viewModel.setCurrent(chapter: chapter)
+                            if TargetDevice.currentDevice == .nativeMac {
+                                self.navigateChapterSelection = 10
+                            }
                         }
                         .listRowSeparator(.hidden)
                         .listRowInsets(.init(top: 0,
@@ -233,6 +247,7 @@ extension ChapterListView {
         }
     }
 }
+
 
 struct ChapterListView_Previews: PreviewProvider {
     static var previews: some View {
