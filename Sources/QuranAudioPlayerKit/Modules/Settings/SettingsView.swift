@@ -26,7 +26,7 @@ struct SettingsView: View {
             }
         }
         .foregroundColor(Color(uiColor: .label))
-        .navigationTitle("Settings")
+        .navigationTitle("Settings".localize)
     }
 }
 
@@ -36,7 +36,7 @@ extension SettingsView {
         VStack(alignment:.leading) {
             HStack{
                 Image(systemName:viewModel.downloadWithPlay ? "checkmark.square":"square")
-                Text("Add to download queue while playing")
+                Text("Add to download queue while playing".localize)
                 Spacer()
             }
             .contentShape(Rectangle())
@@ -55,7 +55,7 @@ extension SettingsView {
                 actionSheet()
             }, label: {
                 HStack{
-                    Text("Share App").bold()
+                    Text("Share App".localize).bold()
                     Spacer()
                     Image(systemName: "square.and.arrow.up")
                 }
@@ -75,9 +75,9 @@ extension SettingsView {
             }, label: {
                 HStack{
                     VStack(alignment: .leading) {
-                        Text("Email your suggestions").bold()
+                        Text("Email your suggestions".localize).bold()
                         if !MFMailComposeViewController.canSendMail() {
-                            Text("Email not configured!")
+                            Text("Email not configured!".localize)
                                 .font(.system(size: 15))
                                 .foregroundColor(ThemeService.themeColor.opacity(0.7))
                         }
@@ -101,7 +101,7 @@ extension SettingsView {
     @ViewBuilder var downloadWithView:some View {
         
         VStack(alignment:.leading) {
-            Text("Download with:").bold()
+            Text("Download with:".localize).bold()
             Button(action: {
                 viewModel.setDownloadWithWifi()
             }, label: {
@@ -120,7 +120,7 @@ extension SettingsView {
             }, label: {
                 HStack{
                     Image(systemName:viewModel.downloadWith == .cellularAndWifi ? "checkmark.square":"square")
-                    Text("Cellular and Wifi")
+                    Text("Cellular and Wifi".localize)
                     Spacer()
                     Image(systemName: "candybarphone")
                     Image(systemName: "wifi")

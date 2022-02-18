@@ -38,7 +38,7 @@ struct ToastView: ViewModifier {
                             Button {
                                 onConfirm?()
                             } label: {
-                                Text("Ok")
+                                Text("Ok".localize)
                                     .foregroundColor(ThemeService.lableColor.opacity(0.9))
                                     .padding(.horizontal)
                                     .frame(height: 40)
@@ -48,7 +48,7 @@ struct ToastView: ViewModifier {
                             Button {
                                 showToast = false
                             } label: {
-                                Text("Cancel")
+                                Text("Cancel".localize)
                                     .foregroundColor(ThemeService.lableColor.opacity(0.9))
                                     .padding(.horizontal)
                                     .frame(height: 40)

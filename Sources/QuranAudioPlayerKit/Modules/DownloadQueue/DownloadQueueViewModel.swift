@@ -30,9 +30,9 @@ class DownloadQueueViewModel:ObservableObject {
         let downloadWith = DataService.shared.getDownloadWith()
         if !ReachabilityService.isConnectedToNetwork() {
             if downloadWith == .cellularAndWifi {
-                return "Change the Download Setting to 'Cellular And Wifi'"
+                return "Change the Download Setting to 'Cellular And Wifi'".localize
             }
-            return "Please check the Innternet connection"
+            return "Please check the Innternet connection".localize
         }
         return nil
     }

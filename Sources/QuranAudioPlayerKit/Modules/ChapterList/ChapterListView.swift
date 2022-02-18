@@ -85,9 +85,9 @@ struct ChapterListView: View {
             HStack {
                 Spacer()
                 if viewModel.listType == .downloads {
-                    Text("Empty Download List")
+                    Text("Empty Download List".localize)
                 }else if viewModel.listType == .favourites {
-                    Text("Empty Favourites List")
+                    Text("Empty Favourites List".localize)
                 }
                 Spacer()
             }
@@ -151,7 +151,7 @@ struct ChapterListView: View {
                     VStack {
                         Image(systemName: "house.fill")
                             .font(.system(size: 23))
-                        Text("Home")
+                        Text("Home".localize)
                             .font(.system(size: 15))
                     }.foregroundColor(viewModel.listType == .all ? ThemeService.themeColor : Color(uiColor: .secondaryLabel))
                 }.onTapGesture {
@@ -164,7 +164,7 @@ struct ChapterListView: View {
                     VStack {
                         Image(systemName: "square.and.arrow.down.fill")
                             .font(.system(size: 23))
-                        Text("Downloads")
+                        Text("Downloads".localize)
                             .font(.system(size: 15))
                     }.foregroundColor(viewModel.listType == .downloads ? ThemeService.themeColor : Color(uiColor: .secondaryLabel))
                 }.onTapGesture {
@@ -177,7 +177,7 @@ struct ChapterListView: View {
                     VStack {
                         Image(systemName: "star.fill")
                             .font(.system(size: 23))
-                        Text("Favourites")
+                        Text("Favourites".localize)
                             .font(.system(size: 13))
                     }.foregroundColor(viewModel.listType == .favourites ? ThemeService.themeColor : Color(uiColor: .secondaryLabel))
                 }.onTapGesture {
@@ -201,11 +201,11 @@ extension ChapterListView {
     func onFavourite(chapter:ChapterModel) {
         if viewModel.isFavourite(chapter: chapter) {
             toastType = .info
-            toastTitle = "Removed from favourites"
+            toastTitle = "Removed from favourites".localize
             toastDescriptiom = ""
         }else {
             toastType = .info
-            toastTitle = "Added to favourites"
+            toastTitle = "Added to favourites".localize
             toastDescriptiom = ""
         }
         self.showToast = true
@@ -215,8 +215,8 @@ extension ChapterListView {
     func onDownload(chapter:ChapterModel) {
         if viewModel.isDownloaded(chapter: chapter) {
             toastType = .alert
-            toastTitle = "Warning"
-            toastDescriptiom = "Permanently delete the file?"
+            toastTitle = "Warning".localize
+            toastDescriptiom = "Permanently delete the file?".localize
             self.showToast = true
             onToastConfirm = {
                 viewModel.deleteChapter(chapter: chapter)
@@ -227,18 +227,18 @@ extension ChapterListView {
                viewModel.isDownloadWithWifiOnly() {
                 toastType = .alert
                 toastTitle = "Warning"
-                toastDescriptiom = "Start Download using Cellular?"
+                toastDescriptiom = "Start Download using Cellular?".localize
                 onToastConfirm = {
                     viewModel.setDownloadWithCellularAndWifi()
                     self.showToast = false
                 }
             }else if viewModel.isInDownloadQueue(chapter: chapter){
                 toastType = .info
-                toastTitle = "Removed from download queue."
+                toastTitle = "Removed from download queue.".localize
                 toastDescriptiom = ""
             }else {
                 toastType = .info
-                toastTitle = "Added to download queue."
+                toastTitle = "Added to download queue.".localize
                 toastDescriptiom = ""
             }
             

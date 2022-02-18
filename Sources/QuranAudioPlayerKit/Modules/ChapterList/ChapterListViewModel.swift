@@ -17,9 +17,6 @@ class ChapterListViewModel: ObservableObject {
             print("Set from data")
         }
     }
-    var shareText: String {
-        return "App to Listen Quran Arabic and malayalam translation\n Url: "
-    }
     var isPlaying:Bool {AudioService.shared.isPlaying}
     var chapterName:String {currentChapter?.name ?? ""}
     var sliderCurrentValue: CGFloat{AudioService.shared.currentTimeInSecs}

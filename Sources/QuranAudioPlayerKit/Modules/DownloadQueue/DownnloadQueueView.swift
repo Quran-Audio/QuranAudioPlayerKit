@@ -30,7 +30,7 @@ struct DownloadQueueView: View {
                         Spacer(minLength: 20)
                         ScrollView {
                             VStack(spacing:1) {
-                                Section("Download Queue"){
+                                Section("Download Queue".localize){
                                     ForEach(viewModel.downloadQueue, id: \.index) { chapter in
                                         DownloadQueueCell(viewModel: viewModel,
                                                           chapter:chapter)
@@ -40,21 +40,21 @@ struct DownloadQueueView: View {
                         }
                     }else {
                         Spacer(minLength: 20)
-                        Text("Empty Download queue")
+                        Text("Empty Download queue".localize)
                     }
                     Spacer()
                 }
             }
             .foregroundColor(ThemeService.themeColor)
             .toast(showToast: $showToast,
-                   title: "Warning",
+                   title: "Warning".localize,
                    description: toastDescription,
                    type: $toastType,
                    alignment: .center)
 
         }
         .foregroundColor(Color(uiColor: .label))
-        .navigationTitle("Download Manager")
+        .navigationTitle("Download Manager".localize)
         
     }
     
