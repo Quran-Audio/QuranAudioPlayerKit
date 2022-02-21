@@ -51,7 +51,7 @@ struct ChapterListView: View {
             }, content: {
                 FullPlayerView()
             })
-            .navigationTitle("Quran Audio")
+            .navigationTitle("Quran Audio".localize)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: SettingsView()) {
