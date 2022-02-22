@@ -226,7 +226,7 @@ extension ChapterListView {
             if viewModel.isDownloadQueueEmpty(),
                viewModel.isDownloadWithWifiOnly() {
                 toastType = .alert
-                toastTitle = "Warning"
+                toastTitle = "Warning".localize
                 toastDescriptiom = "Start Download using Cellular?".localize
                 onToastConfirm = {
                     viewModel.setDownloadWithCellularAndWifi()
