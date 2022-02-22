@@ -21,7 +21,8 @@ public class DownloadService: NSObject,URLSessionDownloadDelegate {
     
     //FIXME: To Be deleted
     private func startFileDownload(chapter:ChapterModel) {
-        guard let url = URL(string: "\(baseUrl)\(chapter.fileName)") else {
+        guard let urlText = "\(baseUrl)\(chapter.fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let url = URL(string: urlText) else {
             return
         }
         let conf = URLSessionConfiguration.default

@@ -186,7 +186,8 @@ extension AudioService {
         }
         
         //Load Streaming URL
-        return  URL(string: "\(baseUrl)/\(chapter.fileName)")
+        return  URL(string: "\(baseUrl)/\(chapter.fileName)"
+                        .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
         
     }
     
