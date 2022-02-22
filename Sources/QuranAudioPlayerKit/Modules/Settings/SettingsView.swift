@@ -107,7 +107,7 @@ extension SettingsView {
             }, label: {
                 HStack{
                     Image(systemName:viewModel.downloadWith == .wifi ? "checkmark.square":"square")
-                    Text("Wifi")
+                    Text("Wifi".localize)
                     Spacer()
                     Image(systemName: "wifi")
                 }

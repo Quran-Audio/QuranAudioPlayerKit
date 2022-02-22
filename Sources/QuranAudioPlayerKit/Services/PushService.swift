@@ -45,8 +45,8 @@ public class PushService: NSObject {
         let notificationContent = UNMutableNotificationContent()
         
         // Configure Notification Content
-        notificationContent.title = "Come Back"
-        notificationContent.body = "Lets listen Quran. May ALLAH bless you"
+        notificationContent.title = "Come Back".localize
+        notificationContent.body = "Lets listen Quran. May ALLAH bless you".localize
         
         //Firday Trigger
         var date = DateComponents()
